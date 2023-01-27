@@ -6,7 +6,9 @@ import SupportIcon from './icons/IconSupport.vue'
 import ToolingIcon from './icons/IconTooling.vue'
 import WelcomeItem from './WelcomeItem.vue'
 
-/* import { hihihi, huehue, idk, horse, rabbit } from '../modules/test2' */
+import { cat, add } from '../modules/test2'
+console.log(cat)
+add(1, 2)
 </script>
 
 <template>
