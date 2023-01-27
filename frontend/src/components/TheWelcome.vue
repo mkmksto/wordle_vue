@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
+import DocumentationIcon from './icons/IconDocumentation.vue'
+import EcosystemIcon from './icons/IconEcosystem.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import ToolingIcon from './icons/IconTooling.vue'
+import WelcomeItem from './WelcomeItem.vue'
 
-import { idk } from '../modules/test2'
-idk()
+/* import { hihihi, huehue, idk, horse, rabbit } from '../modules/test2' */
 </script>
 
 <template>

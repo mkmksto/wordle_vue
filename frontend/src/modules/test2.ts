@@ -10,3 +10,7 @@ export function idk() {
     console.log('from idk')
     return 'idk'
 }
+
+export function huehue(h: string): string {
+    return 'huehue'
+}
