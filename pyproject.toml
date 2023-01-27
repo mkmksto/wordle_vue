@@ -1,0 +1,11 @@
+[tool.black]
+line-length = 88
+--skip-string-normalization = true
+
+[tool.pyright]
+venv = 'mkify_venv'
+venvPath = './backend/mkify_venv'
+
+[tool.isort]
+profile = "black"
+
