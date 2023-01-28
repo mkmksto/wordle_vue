@@ -2,7 +2,7 @@
 import LaithCards from './LaithCards.vue'
 import { computed, ref } from 'vue'
 
-import type { validGenders, Invitee } from '../types/globalTypes'
+import type { validGenders, Invitee } from '../types/laithTypes'
 
 const name_ = ref<string>('')
 // or const name = ref('') // will infer type

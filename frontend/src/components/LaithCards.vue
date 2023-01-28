@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { validGenders } from '../types/globalTypes'
+import type { validGenders } from '../types/laithTypes'
 
 /* const props = defineProps(['invitee']) // JS way */
 defineProps<{
