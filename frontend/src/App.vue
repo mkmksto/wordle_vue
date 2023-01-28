@@ -31,6 +31,7 @@ main {
 <style>
 /* global styles */
 :root {
-    --main-color: hsl(11, 71.9%, 53.9%);
+    --main-color: hsl(11, 65.9%, 46.9%);
+    --main-text-color: #faf0ea;
 }
 </style>
