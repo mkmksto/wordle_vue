@@ -20,12 +20,13 @@ const genderCount = computed<{
             if (invitee.gender === 'male') {
                 // we need to destructure to account for the female prop inside countObj
                 return {
-                    ...countObj,
+                    /* ...countObj, below is probably more readable*/
+                    female: countObj.female,
                     male: ++countObj.male,
                 }
             }
             return {
-                ...countObj,
+                male: countObj.male,
                 female: ++countObj.female,
             }
         },
