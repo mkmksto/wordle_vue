@@ -1,3 +1,11 @@
+## my changes
+__pychache__
+*/__pychache__/*
+*.pyc
+tt_backend_venv
+venv
+
+#########
 # Logs
 logs
 *.log
