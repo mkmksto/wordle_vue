@@ -35,14 +35,17 @@ def get_all_dict_data(file_paths: Generator[Path, None, None]) -> dict:
     for path in file_paths:
         with open(path, 'r', encoding='utf8') as file:
             data: dict = json.load(file)
-            consolidated_dict = data
+            consolidated_dict = consolidated_dict | data
 
     return consolidated_dict
 
 
 if __name__ == "__main__":
-    first_file = get_dict_file_paths()
-    if first_file:
-        # print(len(list(first_file)))
-        print(list(first_file))
-        # first_file = list(first_file)[0]
+    # first_file = get_dict_file_paths()
+    # if first_file:
+    #     # print(len(list(first_file)))
+    #     print(list(first_file))
+    #     # first_file = list(first_file)[0]
+    dict_file_paths = get_dict_file_paths()
+    all_dict_data = get_all_dict_data(dict_file_paths)
+    print(len(all_dict_data))
