@@ -33,7 +33,7 @@ const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
 .letter {
     width: 4rem;
     height: 4rem;
-    border: 3.5px solid var(--main-text-color);
+    border: 3px solid var(--main-text-color);
     border-radius: 0.9rem;
     display: flex;
     align-items: center;
@@ -42,6 +42,7 @@ const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
     text-transform: uppercase;
     font-size: 1.4rem;
     font-family: 'Space Grotesk';
+    font-weight: 600;
     user-select: none;
 }
 
