@@ -4,6 +4,7 @@ __pychache__
 *.pyc
 tt_backend_venv
 venv
+\\
 
 #########
 # Logs

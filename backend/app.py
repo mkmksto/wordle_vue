@@ -1,4 +1,5 @@
-from typing import Any
+import pathlib
+from typing import Any, Generator
 
 from flask import Flask, request
 from flask_cors import CORS
@@ -9,8 +10,12 @@ CORS(app)
 
 
 def main():
-    dict_file_paths = json_utils.get_dict_file_paths()
-    all_dict_data = json_utils.get_all_dict_data(dict_file_paths)
+    dict_file_paths: Generator[
+        pathlib.Path, None, None
+    ] | None = json_utils.get_dict_file_paths()
+    if not dict_file_paths:
+        raise FileNotFoundError('Dictionary files not found')
+    all_dict_data: dict = json_utils.get_all_dict_data(dict_file_paths)
     return english_dictionary.EnglishDict(all_dict_data)
 
 
