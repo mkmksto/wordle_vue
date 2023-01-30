@@ -1,0 +1,14 @@
+{
+  "name": "wordle_vue",
+  "version": "1.0.0",
+  "description": "actual package.json is found inside frontend/",
+  "scripts": {
+    "dev": "cd frontend && pnpm dev",
+    "build": "cd frontend && pnpm build",
+    "fei": "cd frontend && pnpm install",
+    "flaskdev": "cd backend && python3 app.py"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

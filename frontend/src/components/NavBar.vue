@@ -39,7 +39,7 @@ nav {
     text-orientation: upright;
     /* color: var(--main-text-color); */
     font-family: 'Space Grotesk';
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 500;
 }
 
