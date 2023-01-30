@@ -1,3 +1,6 @@
+from bs4 import BeautifulSoup
+
+
 def some_test():
     print('hello world')
 
