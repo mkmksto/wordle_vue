@@ -41,6 +41,7 @@ nav {
     font-family: 'Space Grotesk';
     font-size: 2.5rem;
     font-weight: 500;
+    user-select: none;
 }
 
 ul {

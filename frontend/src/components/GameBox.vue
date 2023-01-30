@@ -42,6 +42,7 @@ const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
     text-transform: uppercase;
     font-size: 1.4rem;
     font-family: 'Space Grotesk';
+    user-select: none;
 }
 
 .cell {
