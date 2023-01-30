@@ -11,5 +11,5 @@ def test_fun():
 
 
 if __name__ == "__main__":
-    files = json_utils.get_dict_file_paths(debug=True)
+    files = json_utils.get_dict_file_paths()
     print(len(list(files)))

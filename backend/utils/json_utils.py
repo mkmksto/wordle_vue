@@ -3,18 +3,22 @@ from collections.abc import Generator
 from pathlib import Path
 
 
-def get_dict_file_paths(
-    debug: bool = False,
-) -> Generator[Path, None, None] | None:
-    if debug:
-        dict_files = Path(__file__).parent.parent / 'dictionary_files'
-        dict_files = dict_files.glob('D*.json')
+def get_dict_file_paths() -> Generator[Path, None, None] | None:
+    """Get the file paths of all the English dictionary json files
 
-        return dict_files
-
-    dict_files = Path(__file__).cwd() / 'dictionary_files'
+    Returns:
+        list: List of all the file paths of the json files
+    """
+    dict_files = Path(__file__).parent.parent / 'dictionary_files'
     dict_files = dict_files.glob('D*.json')
+
     return dict_files
+
+    # debug might not be necessary at all beaucse Path always operates relative
+    # to where the file was defined (which is nice)
+    # dict_files = Path(__file__).cwd() / 'dictionary_files'
+    # dict_files = dict_files.glob('D*.json')
+    # return dict_files
 
 
 def get_all_dict_data(file_paths: Generator[Path, None, None]) -> dict:
@@ -37,7 +41,7 @@ def get_all_dict_data(file_paths: Generator[Path, None, None]) -> dict:
 
 
 if __name__ == "__main__":
-    first_file = get_dict_file_paths(debug=True)
+    first_file = get_dict_file_paths()
     if first_file:
         # print(len(list(first_file)))
         print(list(first_file))
