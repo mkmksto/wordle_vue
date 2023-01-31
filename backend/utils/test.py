@@ -1,3 +1,9 @@
+import math
+import random
+import re
+from math import tau
+from pathlib import Path
+
 from bs4 import BeautifulSoup
 
 
@@ -14,3 +20,7 @@ def func3():
 
 
 another_func()
+
+
+def func4():
+    x = tau
