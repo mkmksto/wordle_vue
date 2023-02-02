@@ -8,6 +8,9 @@ import { useRandomWord } from '../stores/random_word'
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
+const randomWord$ = useRandomWord()
+const { renewCurrentWord$ } = randomWord$
+
 // represents the values stored inside the guessStore's all guesses
 const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
 
@@ -16,8 +19,8 @@ onMounted(async () => {
     window.addEventListener('keypress', () => {
         console.log('keypress event')
     })
-    console.log('game settings', gameSettings$.value)
-    // do the populating of store info inside here
+    await renewCurrentWord$(gameSettings$.value)
+    console.log(randomWord$.currentRandomWord$)
 })
 </script>
 

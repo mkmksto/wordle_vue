@@ -27,11 +27,11 @@ def index():
     return 'hello from index'
 
 
-@app.route('/api/random_word', methods=['GET'])
+@app.route('/api/random_word', methods=['GET', 'POST'])
 def get_random_word():
     # TODO: define the shape of the dictionary based on what you'll pass to this endpoint
-    # frontend_settings: dict[str, Any] | None = request.get_json() or {}
-    frontend_settings: dict[str, Any] | None = {}
+    frontend_settings: dict[str, Any] | None = request.get_json() or {}
+    # frontend_settings: dict[str, Any] | None = {}
     # if not frontend_settings:
     #     return ('', 504)
 
@@ -46,6 +46,7 @@ def get_random_word():
         if len(rand_word) == num_chars and frequency >= difficulty:
             break
 
+    print('************ FINAL random word: ', rand_word)
     return {'word': rand_word}
 
 

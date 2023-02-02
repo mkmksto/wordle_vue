@@ -25,9 +25,6 @@ export const useRandomWord = defineStore('randomWord', () => {
     }
 })
 
-// TODO: this should be a post request sending the Game Settings to the flask backend
-// TODO: update backend to parse gameSetting
-// TODO: return type
 /**
  * Fetch a random word the from Flask backend
  *
@@ -36,7 +33,7 @@ export const useRandomWord = defineStore('randomWord', () => {
  * @throws {Error} - throw error if fetching backend is unsuccessful
  * @returns {Promise<object>} - backend data as an object {'word': rand_word}
  */
-async function fetchBackendData(gameSettings: object) {
+async function fetchBackendData(gameSettings: object): Promise<object> {
     const fetchUrl = window.location.href.includes('vercel')
         ? '/api/random_word'
         : 'http://127.0.0.1:5000/api/random_word'
