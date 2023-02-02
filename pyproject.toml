@@ -3,8 +3,8 @@ line-length = 88
 --skip-string-normalization = true
 
 [tool.pyright]
-venv = 'mkify_venv'
-venvPath = './backend/mkify_venv'
+venv = 'venv'
+venvPath = './backend/venv'
 
 [tool.isort]
 profile = "black"
