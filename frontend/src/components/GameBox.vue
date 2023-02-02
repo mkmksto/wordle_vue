@@ -4,12 +4,16 @@ import { onMounted } from 'vue'
 
 import { useGameSettings } from '../stores/game_settings'
 import { useRandomWord } from '../stores/random_word'
+import { useGuessTracker } from '../stores/guess_tracker'
 
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
 const randomWord$ = useRandomWord()
 const { renewCurrentWord$ } = randomWord$
+
+const guessTracker$ = useGuessTracker()
+const { allGuesses$ } = storeToRefs(guessTracker$)
 
 // represents the values stored inside the guessStore's all guesses
 const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
@@ -27,8 +31,10 @@ onMounted(async () => {
 <template>
     <div class="game-box">
         <div class="words-container">
-            <div v-for="word in words" class="word">
-                <div v-for="letter in word" class="letter">{{ letter }}</div>
+            <div v-for="wordGuess in allGuesses$" class="word">
+                <div v-for="{ letter, id } in wordGuess" class="letter">
+                    {{ letter }}
+                </div>
             </div>
         </div>
     </div>

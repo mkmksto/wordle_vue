@@ -9,7 +9,10 @@ export const useRandomWord = defineStore('randomWord', () => {
 
     // TODO: this should be a post request sending the Game Settings to the flask backend
     async function renewCurrentWord$(gameSettings: object): Promise<void> {
-        const backendData = await fetchBackendData(gameSettings)
+        interface flaskResponse {
+            word: string
+        }
+        const backendData = (await fetchBackendData(gameSettings)) as flaskResponse
         currentRandomWord$.value = backendData.word
     }
 
