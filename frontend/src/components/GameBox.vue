@@ -1,6 +1,24 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+
+import { useGameSettings } from '../stores/game_settings'
+import { useRandomWord } from '../stores/random_word'
+
+const settings$ = useGameSettings()
+const { gameSettings$ } = storeToRefs(settings$)
+
 // represents the values stored inside the guessStore's all guesses
 const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
+
+onMounted(async () => {
+    console.log('*****mounting from GameBox.vue')
+    window.addEventListener('keypress', () => {
+        console.log('keypress event')
+    })
+    console.log('game settings', gameSettings$.value)
+    // do the populating of store info inside here
+})
 </script>
 
 <template>

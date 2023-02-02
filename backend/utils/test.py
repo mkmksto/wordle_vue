@@ -1,10 +1,9 @@
+"""
+Scratch paper
+"""
 import math
-import random
 import re
-from math import tau
-from pathlib import Path
-
-from bs4 import BeautifulSoup
+from typing import Any
 
 
 def some_test():
@@ -23,4 +22,15 @@ another_func()
 
 
 def func4():
-    x = tau
+    something = math.tau
+    snake: list[Any] = re.findall(r'', '')
+    print(something, snake)
+
+
+if __name__ == "__main__":
+    j = 0
+    some_string = ''
+    for i in range(6):
+        j += i + 1
+        some_string += str(i) + str(j)
+        print(3)

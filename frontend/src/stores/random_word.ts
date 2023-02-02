@@ -7,9 +7,10 @@ export const useRandomWord = defineStore('randomWord', () => {
         Boolean(currentRandomWord$.value)
     )
 
-    async function renewCurrentWord$(): Promise<void> {
-        const backendData = await fetchBackendData()
-        currentRandomWord$.value = backendData.rand_word
+    // TODO: this should be a post request sending the Game Settings to the flask backend
+    async function renewCurrentWord$(gameSettings: object): Promise<void> {
+        const backendData = await fetchBackendData(gameSettings)
+        currentRandomWord$.value = backendData.word
     }
 
     function clearCurrentWord$(): void {
@@ -24,21 +25,33 @@ export const useRandomWord = defineStore('randomWord', () => {
     }
 })
 
-async function fetchBackendData() {
+// TODO: this should be a post request sending the Game Settings to the flask backend
+// TODO: update backend to parse gameSetting
+// TODO: return type
+/**
+ * Fetch a random word the from Flask backend
+ *
+ * @async
+ * @param {object} gameSettings - the gameSettings$ store property (num_chars, difficulty)
+ * @throws {Error} - throw error if fetching backend is unsuccessful
+ * @returns {Promise<object>} - backend data as an object {'word': rand_word}
+ */
+async function fetchBackendData(gameSettings: object) {
     const fetchUrl = window.location.href.includes('vercel')
         ? '/api/random_word'
         : 'http://127.0.0.1:5000/api/random_word'
     console.log('random_word.ts - current URL: ', fetchUrl)
     const res = await fetch(fetchUrl, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             Accept: 'application/json',
             'Access-Control-Allow-Origin': '*',
             'Content-type': 'application/json',
         },
+        body: JSON.stringify(gameSettings),
     })
 
     if (!res.ok) throw new Error('backend error, either 4xx or 5xx')
-    const py_resp = await res.json()
+    const py_resp: { word: string } = await res.json()
     return py_resp
 }
