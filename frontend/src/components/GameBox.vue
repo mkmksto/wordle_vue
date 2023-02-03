@@ -24,8 +24,10 @@ onMounted(async () => {
     window.addEventListener('keydown', (e) => {
         onKeyDown(e)
     })
+
+    // toggleTileColor()
     await renewCurrentWord$(gameSettings$.value)
-    console.log('***all guesses initial value: ', allGuesses$.value)
+    console.log('*****current random word: ', currentRandomWord$)
 })
 
 const allowInput = ref<boolean>(true)
@@ -41,13 +43,42 @@ function onKeyDown(e: KeyboardEvent): void {
     }
     console.log('***keyboard press***')
 }
+
+function toggleTileColor(): void {
+    const letterTiles = document.querySelectorAll(
+        '.letter'
+    ) as NodeListOf<HTMLDivElement>
+    letterTiles.forEach((tile) => {
+        tile.classList.toggle('is-letter-in-word')
+        tile.classList.toggle('is-letter-not-in-word')
+        tile.classList.toggle('is-letter-in-correct-position')
+    })
+}
 </script>
 
 <template>
     <div class="game-box">
         <div class="words-container">
             <div v-for="wordGuess in allGuesses$" class="word">
-                <div v-for="{ letter, id } in wordGuess" :key="id" class="letter">
+                <div
+                    v-for="{
+                        id,
+                        letter,
+                        isBlank,
+                        isLetterInWord,
+                        isLetterInCorrectPosition,
+                    } in wordGuess"
+                    :key="id"
+                    class="letter"
+                    :class="[
+                        {
+                            'is-letter-in-word':
+                                isLetterInWord && !isLetterInCorrectPosition,
+                            'is-letter-not-in-word': !isLetterInWord && !isBlank,
+                            'is-letter-in-correct-position': isLetterInCorrectPosition,
+                        },
+                    ]"
+                >
                     {{ letter }}
                 </div>
             </div>
@@ -56,6 +87,20 @@ function onKeyDown(e: KeyboardEvent): void {
 </template>
 
 <style scoped>
+/* Dynamic Styles */
+.is-letter-in-word {
+    background-color: var(--letter-in-word);
+}
+
+.is-letter-not-in-word {
+    background-color: var(--letter-not-in-word);
+}
+
+.is-letter-in-correct-position {
+    background-color: var(--letter-in-correct-position);
+}
+
+/* Static Styles */
 .words-container {
     display: flex;
     flex-direction: column;

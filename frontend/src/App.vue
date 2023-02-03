@@ -25,6 +25,9 @@ main {
 :root {
     --main-color: hsl(11, 65.9%, 46.9%);
     --main-text-color: #f9e9f2;
+    --letter-in-word: rgb(190, 130, 67);
+    --letter-not-in-word: rgb(100, 100, 100);
+    --letter-in-correct-position: rgb(119, 155, 67);
     /* --main-text-color: #faf0ea; */
 }
 </style>

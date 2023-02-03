@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref, type ComputedRef } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
+
+import { allowedGuesses } from '../modules/allowed_guesses'
 
 interface LetterGuess {
     id: string
@@ -11,14 +13,14 @@ interface LetterGuess {
 }
 
 export const useGuessTracker = defineStore('guessTracker', () => {
-    const currentGuess$ = ref<LetterGuess[]>([])
     // [[{id, letter, isBlank, isLetterInWord, ....}, {...}], [{...}, {...}], ....... ]
     const allGuesses$ = ref<LetterGuess[][]>(generateEmptyGuessArray(5))
 
-    const currentIdx = ref<number>(0)
+    const currentGuess$: ComputedRef<LetterGuess[]> = computed(
+        () => allGuesses$.value[currentIdx.value]
+    )
 
-    // TODO: use allGuesses, filter using currentIdx
-    const isGuessCanBeAddedTolist$ = computed(() => currentGuess$.value.length === 5)
+    const currentIdx = ref<number>(0)
 
     /**
      * Used in coordination with game settings to change the number of letters for each row
@@ -32,6 +34,7 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     function addLetterToGuess$(letterToAdd: string, currentRandomWord: string): void {
         const currentRow$ = allGuesses$.value[currentIdx.value]
         const nextBlankSpace = currentRow$.find((l) => l.isBlank) as LetterGuess
+        const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
 
         if (!nextBlankSpace) return
         nextBlankSpace.letter = letterToAdd
@@ -41,7 +44,6 @@ export const useGuessTracker = defineStore('guessTracker', () => {
             nextBlankSpace.isLetterInWord = true
         }
 
-        const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
         if (currentRandomWord[blankSpaceIdx] === letterToAdd) {
             nextBlankSpace.isLetterInCorrectPosition = true
         }
@@ -67,26 +69,36 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     }
 
     /**
-     * Returns true if the current random word matches the user's guess
-     *
-     * @param {string} currentWord - taken from the random word store
-     * @returns {boolean}
+     * @param {number} curGuessNumChars - (from game settings): e.g. laugh is 5 chars
+     * @returns {boolean} true if every tile at the current row is filled
      */
-    // TODO: test using current idx
-    function testGuess$(currentWord: string): boolean {
-        // if (currentWord !== currentGuess$.value) return false
-        // return true
+    function isCurGuessRowTilesFilled$(curGuessNumChars: number): boolean {
+        return allGuesses$.value[currentIdx.value].length === curGuessNumChars
+    }
+
+    /**
+     * @returns {boolean} Return true if the current guess is inside the allowed words repository
+     */
+    function isGuessAllowed$(): boolean {
+        return allowedGuesses.includes(
+            currentGuess$.value.map((letter) => letter.letter).join()
+        )
+    }
+
+    function isGuessCorrect$(currentWord: string): boolean {
+        if (currentWord === currentGuess$.value.map((l) => l.letter).join()) return true
+        return false
     }
 
     return {
         currentGuess$,
         allGuesses$,
-        isGuessCanBeAddedTolist$,
+        isCurGuessRowTilesFilled$,
         changeNumBoxesPerRow$,
         addLetterToGuess$,
         removeLastLetterFromGuess$,
         addGuessToGuessList$,
-        testGuess$,
+        isGuessCorrect$,
     }
 })
 
