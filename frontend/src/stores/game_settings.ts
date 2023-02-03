@@ -7,5 +7,9 @@ export const useGameSettings = defineStore('gameSettings', () => {
         difficulty: 'medium',
     })
 
-    return { gameSettings$ }
+    function changeNumChars$(newSize: number): void {
+        gameSettings$.num_chars = newSize
+    }
+
+    return { gameSettings$, changeNumChars$ }
 })
