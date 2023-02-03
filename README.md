@@ -17,33 +17,31 @@
 - Word from backend (exactly same as `vue text twist`)
 - data to be fetched inside `GameBox`
 
+### Do this (current TODOs)
+
+- fix your guess store
+- `addLetterToGuess` should have checks before adding the item to the `allGuesses` array.
+  - check if letter is in word
+  - check if letter is in the correct position
+  - isBlank
+- implement keyboard input and deleting letters from guess
+- implement guess testing by pressing enter
+- !!!(IMPORTANT) (left off at `guess_tracker.ts`, line `35`)
+
 #### Stores
-
-##### Random Word Store
-
-- data fetched is stored inside a store (randomWord$)
-- try if it's possible to use its methods without having to destructure
-- use `property$` syntax for its props
-- data fetching is stored inside the `modules` folder
-
-- properties:
-  1. currentRandomWord$
-  - structure:
-  - not sure yet but i think i only need the string itself
-  2. isBackendDataFetched$ (for vue's `if-else`)
-  3.
 
 ##### Guess Store
 
-- implement a `guess store` `currentGuess$`
-- `guess store` methods:
-  1. addLetterToGuess$
-  2. removeLetterFromGuess$
-  3. testGuess$
-- properties:
-  1. currentGuess$
-  2. allGuesses$
-  3. currentGuessString$ (for comparison purposes?)
+- main property must be an object containing the following properties
+  - isLetterInWord (yellow) (but wrong position) (else: color: grey)
+  - isLetterInCorrectPosition (green)
+  - isBlank (no input yet from user, blank state when loading game)
+- might need a `currentGuessIdx` why? Because we'll start with 25 boilerplate, unfilled `LetterGuess` objects (see interface).
+
+##### Game state store
+
+- see `vue_text_twist`
+- might not be needed, i might only need something like `hasWordBeenGuessed` prop inside `guess_tracker.ts` and something that watches it then shows a modal when i win
 
 #### Cells
 

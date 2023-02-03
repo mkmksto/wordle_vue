@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
 interface LetterGuess {
-    id: number
+    id: string
     letter: string
     isBlank: boolean
     isLetterInWord: boolean
@@ -13,30 +13,50 @@ interface LetterGuess {
 export const useGuessTracker = defineStore('guessTracker', () => {
     const currentGuess$ = ref<LetterGuess[]>([])
     // [[{id, letter, isBlank, isLetterInWord, ....}, {...}], [{...}, {...}], ....... ]
-    const allGuesses$ = ref<LetterGuess[][]>(
-        Array(5).fill(
-            Array(5).fill({
-                id: uuidv4(),
-                letter: '',
-                isBlank: true,
-                isLetterInWord: false,
-                isLetterInCorrectPosition: false,
-            })
-        )
-    )
+    const allGuesses$ = ref<LetterGuess[][]>(generateEmptyGuessArray(5))
 
     const currentIdx = ref<number>(0)
 
     // TODO: use allGuesses, filter using currentIdx
     const isGuessCanBeAddedTolist$ = computed(() => currentGuess$.value.length === 5)
 
-    function addLetterToGuess$(letterToAdd: string): void {
-        // currentGuess$.value.push(letterToAdd)
+    /**
+     * Used in coordination with game settings to change the number of letters for each row
+     *
+     * @param {number} newRowSize - passed from game settings (e.g. claps has a size of 5)
+     */
+    function changeNumBoxesPerRow$(newRowSize: number): void {
+        allGuesses$.value = generateEmptyGuessArray(newRowSize)
     }
 
-    // TODO: use allGuesses
+    function addLetterToGuess$(letterToAdd: string, currentRandomWord: string): void {
+        const currentRow$ = allGuesses$.value[currentIdx.value]
+        const nextBlankSpace = currentRow$.find((l) => l.isBlank) as LetterGuess
+
+        if (!nextBlankSpace) return
+        nextBlankSpace.letter = letterToAdd
+        nextBlankSpace.isBlank = false
+
+        if (currentRandomWord.includes(letterToAdd)) {
+            nextBlankSpace.isLetterInWord = true
+        }
+
+        const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
+        if (currentRandomWord[blankSpaceIdx] === letterToAdd) {
+            nextBlankSpace.isLetterInCorrectPosition = true
+        }
+    }
+
     function removeLastLetterFromGuess$(): void {
-        // currentGuess$.value.pop()
+        const currentRow$ = allGuesses$.value[currentIdx.value]
+        const itemToRemove = [...currentRow$]
+            .reverse()
+            .find((l) => !l.isBlank) as LetterGuess
+        if (!itemToRemove) return
+        itemToRemove.letter = ''
+        itemToRemove.isBlank = true
+        itemToRemove.isLetterInWord = false
+        itemToRemove.isLetterInCorrectPosition = false
     }
 
     // TODO: do at vue-side: check first whether guess can be added to the list before
@@ -62,9 +82,28 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         currentGuess$,
         allGuesses$,
         isGuessCanBeAddedTolist$,
+        changeNumBoxesPerRow$,
         addLetterToGuess$,
         removeLastLetterFromGuess$,
         addGuessToGuessList$,
         testGuess$,
     }
 })
+
+function generateEmptyGuessArray(size: number): LetterGuess[][] {
+    const finalArr: LetterGuess[][] = []
+    for (let i = 0; i < 6; i++) {
+        const nestedArr: LetterGuess[] = []
+        for (let i = 0; i < size; i++) {
+            nestedArr.push({
+                id: uuidv4(),
+                letter: '',
+                isBlank: true,
+                isLetterInWord: false,
+                isLetterInCorrectPosition: false,
+            })
+        }
+        finalArr.push(nestedArr)
+    }
+    return finalArr
+}

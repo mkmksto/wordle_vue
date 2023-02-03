@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import { useGameSettings } from '../stores/game_settings'
 import { useRandomWord } from '../stores/random_word'
@@ -10,6 +10,7 @@ const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
 const randomWord$ = useRandomWord()
+const { currentRandomWord$ } = randomWord$
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
@@ -20,19 +21,33 @@ const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
-    window.addEventListener('keypress', () => {
-        console.log('keypress event')
+    window.addEventListener('keydown', (e) => {
+        onKeyDown(e)
     })
     await renewCurrentWord$(gameSettings$.value)
-    console.log(randomWord$.currentRandomWord$)
+    console.log('***all guesses initial value: ', allGuesses$.value)
 })
+
+const allowInput = ref<boolean>(true)
+
+function onKeyDown(e: KeyboardEvent): void {
+    if (!allowInput.value) return
+    if (/^[a-zA-Z]$/.test(e.key)) {
+        guessTracker$.addLetterToGuess$(e.key, randomWord$.currentRandomWord$)
+    } else if (e.key === 'Backspace') {
+        guessTracker$.removeLastLetterFromGuess$()
+    } else if (e.key === 'Enter') {
+        // TODO: handle
+    }
+    console.log('***keyboard press***')
+}
 </script>
 
 <template>
     <div class="game-box">
         <div class="words-container">
             <div v-for="wordGuess in allGuesses$" class="word">
-                <div v-for="{ letter, id } in wordGuess" class="letter">
+                <div v-for="{ letter, id } in wordGuess" :key="id" class="letter">
                     {{ letter }}
                 </div>
             </div>
