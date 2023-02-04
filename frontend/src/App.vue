@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { useGameState } from '@/stores/game_state'
+
 import GameBox from './components/GameBox.vue'
 import NavBar from './components/NavBar.vue'
+import GameLostModal from '@/components/modals/GameLostModal.vue'
+
+const gameState$ = useGameState()
 </script>
 
 <template>
+    <GameLostModal v-if="gameState$.loseState$ === true" />
     <NavBar />
     <main>
         <GameBox />

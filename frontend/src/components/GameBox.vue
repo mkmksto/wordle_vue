@@ -5,17 +5,22 @@ import { onMounted, ref } from 'vue'
 import { useGameSettings } from '../stores/game_settings'
 import { useRandomWord } from '../stores/random_word'
 import { useGuessTracker } from '../stores/guess_tracker'
+import { useGameState } from '@/stores/game_state'
 import { allowedGuesses } from '@/modules/allowed_guesses'
 
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
+
+const gameState$ = useGameState()
+const { winState$, loseState$ } = storeToRefs(gameState$)
 
 const randomWord$ = useRandomWord()
 const { currentRandomWord$ } = randomWord$
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
-const { allGuesses$, currentIdx$, currentGuess$ } = storeToRefs(guessTracker$)
+const { allGuesses$, currentIdx$, currentGuess$, isAllRowsFilled$ } =
+    storeToRefs(guessTracker$)
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
@@ -52,9 +57,22 @@ function onEnter(): void {
     showTileColors()
     if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
         console.log('a winnnar is YOUUUU')
+        // TODO: show you win modal
         allowInput_.value = false
-        // TODO: if guess is correct, update win status to won
+        winState$.value = true
+        loseState$.value = false
         return
+    }
+
+    if (
+        isAllRowsFilled$ &&
+        !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
+        currentIdx$.value === 5
+    ) {
+        // console.log('!!!!! u lose i guess')
+        // console.log(allGuesses$.value[4].every((l) => !l.isBlank))
+        winState$.value = false
+        loseState$.value = true
     }
     guessTracker$.currentIdx$++
 }
