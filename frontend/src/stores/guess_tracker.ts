@@ -73,6 +73,10 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         return allGuesses$.value[currentIdx$.value].length === curGuessNumChars
     }
 
+    const isAllRowsFilled$: ComputedRef<boolean> = computed(() =>
+        allGuesses$.value.every((row) => row.every((letter) => !letter.isBlank))
+    )
+
     function isGuessCorrect$(currentWord: string): boolean {
         if (currentWord === currentGuess$.value.map((l) => l.letter).join(''))
             return true
@@ -87,15 +91,16 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         changeNumBoxesPerRow$,
         addLetterToGuess$,
         removeLastLetterFromGuess$,
+        isAllRowsFilled$,
         isGuessCorrect$,
     }
 })
 
-function generateEmptyGuessArray(size: number): LetterGuess[][] {
+function generateEmptyGuessArray(wordSize: number): LetterGuess[][] {
     const finalArr: LetterGuess[][] = []
     for (let i = 0; i < 6; i++) {
         const nestedArr: LetterGuess[] = []
-        for (let i = 0; i < size; i++) {
+        for (let i = 0; i < wordSize; i++) {
             nestedArr.push({
                 id: uuidv4(),
                 letter: '',
