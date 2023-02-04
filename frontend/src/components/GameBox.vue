@@ -27,10 +27,10 @@ onMounted(async () => {
     console.log('*****current random word: ', currentRandomWord$)
 })
 
-const allowInput = ref<boolean>(true)
+const allowInput_ = ref<boolean>(true)
 
 function onKeyDown(e: KeyboardEvent): void {
-    if (!allowInput.value) return
+    if (!allowInput_.value) return
     if (/^[a-zA-Z]$/.test(e.key)) {
         guessTracker$.addLetterToGuess$(e.key, randomWord$.currentRandomWord$)
     } else if (e.key === 'Backspace') {
@@ -52,7 +52,7 @@ function onEnter(): void {
     showTileColors()
     if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
         console.log('a winnnar is YOUUUU')
-        allowInput.value = false
+        allowInput_.value = false
         // TODO: if guess is correct, update win status to won
         return
     }

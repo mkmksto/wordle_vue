@@ -29,6 +29,12 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         allGuesses$.value = generateEmptyGuessArray(newRowSize)
     }
 
+    /**
+     * Adds letter to the current row then updates whether the letter is in the word, etc.
+     *
+     * @param {string} letterToAdd - the key press
+     * @param {string} currentRandomWord - the word fetched from the backend (for comparison)
+     */
     function addLetterToGuess$(letterToAdd: string, currentRandomWord: string): void {
         const currentRow$ = allGuesses$.value[currentIdx$.value]
         const nextBlankSpace = currentRow$.find((l) => l.isBlank) as LetterGuess
@@ -59,13 +65,6 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         itemToRemove.isLetterInCorrectPosition = false
     }
 
-    // TODO: do at vue-side: check first whether guess can be added to the list before
-    // calling this function
-    // TODO: might not be necessary, maybe i only need to increment cur idx after checking `isGuessCanBeAddedToList`
-    function addGuessToGuessList$(): void {
-        // allGuesses$.value.push(currentGuess$.value)
-    }
-
     /**
      * @param {number} curGuessNumChars - (from game settings): e.g. laugh is 5 chars
      * @returns {boolean} true if every tile at the current row is filled
@@ -88,7 +87,6 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         changeNumBoxesPerRow$,
         addLetterToGuess$,
         removeLastLetterFromGuess$,
-        addGuessToGuessList$,
         isGuessCorrect$,
     }
 })
