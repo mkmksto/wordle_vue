@@ -52,7 +52,7 @@ function onEnter(): void {
     showTileColors()
     if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
         console.log('a winnnar is YOUUUU')
-        // TODO: disable input
+        allowInput.value = false
         // TODO: if guess is correct, update win status to won
         return
     }
