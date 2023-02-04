@@ -60,10 +60,8 @@ function onEnter(): void {
 }
 
 function showTileColors(): void {
-    // filter only the current row
-    const letterTiles = Array.from(
-        document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
-    )
+    // Get all letter tile divs, then filter only the current row
+    Array.from(document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>)
         .filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
         .forEach((tile, idx) => {
             const letterAtIdx = currentGuess$.value[idx]
@@ -75,7 +73,6 @@ function showTileColors(): void {
                 tile.classList.add('is-letter-in-correct-position')
             }
         })
-    console.log(letterTiles)
 }
 </script>
 
