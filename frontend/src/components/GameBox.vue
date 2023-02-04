@@ -49,7 +49,7 @@ function onEnter(): void {
         // TODO: check some backend API if the word is fairly common (frequency)
         return
     }
-    toggleTileColor()
+    showTileColors()
     if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
         console.log('a winnnar is YOUUUU')
         // TODO: disable input
@@ -59,7 +59,7 @@ function onEnter(): void {
     guessTracker$.currentIdx$++
 }
 
-function toggleTileColor(): void {
+function showTileColors(): void {
     // filter only the current row
     const letterTiles = Array.from(
         document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
