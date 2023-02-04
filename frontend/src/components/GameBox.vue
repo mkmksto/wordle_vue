@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue'
 import { useGameSettings } from '../stores/game_settings'
 import { useRandomWord } from '../stores/random_word'
 import { useGuessTracker } from '../stores/guess_tracker'
+import { allowedGuesses } from '@/modules/allowed_guesses'
 
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
@@ -14,10 +15,7 @@ const { currentRandomWord$ } = randomWord$
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
-const { allGuesses$ } = storeToRefs(guessTracker$)
-
-// represents the values stored inside the guessStore's all guesses
-const words: string[] = ['ranks', 'quark', 'hello', 'frank', 'beach', 'sands']
+const { allGuesses$, currentIdx$, currentGuess$ } = storeToRefs(guessTracker$)
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
@@ -25,7 +23,6 @@ onMounted(async () => {
         onKeyDown(e)
     })
 
-    // toggleTileColor()
     await renewCurrentWord$(gameSettings$.value)
     console.log('*****current random word: ', currentRandomWord$)
 })
@@ -39,45 +36,58 @@ function onKeyDown(e: KeyboardEvent): void {
     } else if (e.key === 'Backspace') {
         guessTracker$.removeLastLetterFromGuess$()
     } else if (e.key === 'Enter') {
-        // TODO: handle
+        if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
+        if (
+            !allowedGuesses.includes(
+                currentGuess$.value.map((letter) => letter.letter).join('')
+            )
+        ) {
+            // TODO: show temporary modal (i.e. invalid guess)
+            // TODO: check some backend API if the word is fairly common (frequency)
+            return
+        }
+        toggleTileColor()
+        if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
+            console.log('a winnnar is YOUUUU')
+            // TODO: disable input
+            // TODO: if guess is correct, update win status to won
+            return
+        }
+        guessTracker$.currentIdx$++
     }
     console.log('***keyboard press***')
 }
 
 function toggleTileColor(): void {
-    const letterTiles = document.querySelectorAll(
-        '.letter'
-    ) as NodeListOf<HTMLDivElement>
-    letterTiles.forEach((tile) => {
-        tile.classList.toggle('is-letter-in-word')
-        tile.classList.toggle('is-letter-not-in-word')
-        tile.classList.toggle('is-letter-in-correct-position')
-    })
+    // filter only the current row
+    const letterTiles = Array.from(
+        document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
+    )
+        .filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
+        .forEach((tile, idx) => {
+            const letterAtIdx = currentGuess$.value[idx]
+            if (letterAtIdx.isLetterInWord && !letterAtIdx.isLetterInCorrectPosition) {
+                tile.classList.add('is-letter-in-word')
+            } else if (!letterAtIdx.isLetterInWord) {
+                tile.classList.add('is-letter-not-in-word')
+            } else if (letterAtIdx.isLetterInCorrectPosition) {
+                tile.classList.add('is-letter-in-correct-position')
+            }
+        })
+    console.log(letterTiles)
 }
 </script>
 
 <template>
     <div class="game-box">
         <div class="words-container">
-            <div v-for="wordGuess in allGuesses$" class="word">
+            <div v-for="(wordGuess, idx) in allGuesses$" class="word">
+                <!-- row-id will be used for toggling the colors in that row -->
                 <div
-                    v-for="{
-                        id,
-                        letter,
-                        isBlank,
-                        isLetterInWord,
-                        isLetterInCorrectPosition,
-                    } in wordGuess"
+                    v-for="{ id, letter } in wordGuess"
                     :key="id"
                     class="letter"
-                    :class="[
-                        {
-                            'is-letter-in-word':
-                                isLetterInWord && !isLetterInCorrectPosition,
-                            'is-letter-not-in-word': !isLetterInWord && !isBlank,
-                            'is-letter-in-correct-position': isLetterInCorrectPosition,
-                        },
-                    ]"
+                    :data-rowid="idx"
                 >
                     {{ letter }}
                 </div>

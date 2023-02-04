@@ -2,8 +2,6 @@ import { defineStore } from 'pinia'
 import { computed, ref, type ComputedRef } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
-import { allowedGuesses } from '../modules/allowed_guesses'
-
 interface LetterGuess {
     id: string
     letter: string
@@ -17,10 +15,10 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     const allGuesses$ = ref<LetterGuess[][]>(generateEmptyGuessArray(5))
 
     const currentGuess$: ComputedRef<LetterGuess[]> = computed(
-        () => allGuesses$.value[currentIdx.value]
+        () => allGuesses$.value[currentIdx$.value]
     )
 
-    const currentIdx = ref<number>(0)
+    const currentIdx$ = ref<number>(0)
 
     /**
      * Used in coordination with game settings to change the number of letters for each row
@@ -32,7 +30,7 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     }
 
     function addLetterToGuess$(letterToAdd: string, currentRandomWord: string): void {
-        const currentRow$ = allGuesses$.value[currentIdx.value]
+        const currentRow$ = allGuesses$.value[currentIdx$.value]
         const nextBlankSpace = currentRow$.find((l) => l.isBlank) as LetterGuess
         const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
 
@@ -50,7 +48,7 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     }
 
     function removeLastLetterFromGuess$(): void {
-        const currentRow$ = allGuesses$.value[currentIdx.value]
+        const currentRow$ = allGuesses$.value[currentIdx$.value]
         const itemToRemove = [...currentRow$]
             .reverse()
             .find((l) => !l.isBlank) as LetterGuess
@@ -72,28 +70,21 @@ export const useGuessTracker = defineStore('guessTracker', () => {
      * @param {number} curGuessNumChars - (from game settings): e.g. laugh is 5 chars
      * @returns {boolean} true if every tile at the current row is filled
      */
-    function isCurGuessRowTilesFilled$(curGuessNumChars: number): boolean {
-        return allGuesses$.value[currentIdx.value].length === curGuessNumChars
-    }
-
-    /**
-     * @returns {boolean} Return true if the current guess is inside the allowed words repository
-     */
-    function isGuessAllowed$(): boolean {
-        return allowedGuesses.includes(
-            currentGuess$.value.map((letter) => letter.letter).join()
-        )
+    function isCurrentRowFilled$(curGuessNumChars: number): boolean {
+        return allGuesses$.value[currentIdx$.value].length === curGuessNumChars
     }
 
     function isGuessCorrect$(currentWord: string): boolean {
-        if (currentWord === currentGuess$.value.map((l) => l.letter).join()) return true
+        if (currentWord === currentGuess$.value.map((l) => l.letter).join(''))
+            return true
         return false
     }
 
     return {
         currentGuess$,
         allGuesses$,
-        isCurGuessRowTilesFilled$,
+        currentIdx$,
+        isCurrentRowFilled$,
         changeNumBoxesPerRow$,
         addLetterToGuess$,
         removeLastLetterFromGuess$,
