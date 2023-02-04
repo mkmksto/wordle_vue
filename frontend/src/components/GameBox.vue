@@ -36,26 +36,27 @@ function onKeyDown(e: KeyboardEvent): void {
     } else if (e.key === 'Backspace') {
         guessTracker$.removeLastLetterFromGuess$()
     } else if (e.key === 'Enter') {
-        if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
-        if (
-            !allowedGuesses.includes(
-                currentGuess$.value.map((letter) => letter.letter).join('')
-            )
-        ) {
-            // TODO: show temporary modal (i.e. invalid guess)
-            // TODO: check some backend API if the word is fairly common (frequency)
-            return
-        }
-        toggleTileColor()
-        if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
-            console.log('a winnnar is YOUUUU')
-            // TODO: disable input
-            // TODO: if guess is correct, update win status to won
-            return
-        }
-        guessTracker$.currentIdx$++
+        onEnter()
     }
     console.log('***keyboard press***')
+}
+
+function onEnter(): void {
+    if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
+    if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
+        // TODO: show temporary modal (i.e. invalid guess)
+        console.log('sorry, invalid guess')
+        // TODO: check some backend API if the word is fairly common (frequency)
+        return
+    }
+    toggleTileColor()
+    if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
+        console.log('a winnnar is YOUUUU')
+        // TODO: disable input
+        // TODO: if guess is correct, update win status to won
+        return
+    }
+    guessTracker$.currentIdx$++
 }
 
 function toggleTileColor(): void {
