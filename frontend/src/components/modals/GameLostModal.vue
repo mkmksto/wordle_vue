@@ -1,20 +1,46 @@
 <script setup lang="ts">
+import { useRandomWord } from '@/stores/random_word'
 import { useResetGame } from '@/composables/use_reset_game'
-// function someFunc() {
-//     console.log('dsadsadas')
-// }
+
+const randomWord$ = useRandomWord()
 </script>
 
 <template>
     <div class="modal">
         <div class="modal-card">
-            <span class="you-lose-msg">Game Over</span>
+            <div class="text-container">
+                <span class="you-lose-msg">Game Over</span>
+                <div class="answer-reveal">The answer was:</div>
+                <div class="current-word">{{ randomWord$.currentRandomWord$ }}</div>
+            </div>
             <button @click="useResetGame">Restart</button>
         </div>
     </div>
 </template>
 
 <style scoped>
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.you-lose-msg {
+    margin-bottom: 2rem;
+}
+
+.current-word {
+    background-color: rgb(210, 210, 210);
+    color: rgb(80, 80, 80);
+    padding: 0.7rem 1.2rem;
+    border-radius: 0.8rem;
+    border: 2px dashed rgb(100, 100, 100);
+    text-transform: uppercase;
+    letter-spacing: 0.9rem;
+}
+/* */
 .modal {
     position: fixed;
     top: 0;
@@ -43,19 +69,23 @@ import { useResetGame } from '@/composables/use_reset_game'
 }
 
 .you-lose-msg {
-    margin-top: 5rem;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk';
 }
 
 button {
     background-color: rgb(70, 70, 70);
     bottom: 0.25rem;
     color: rgb(245, 245, 245);
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-family: 'Space Grotesk';
     margin-bottom: 1.5rem;
     border: none;
     border-radius: 0.5rem;
-    padding: 0.5rem;
+    padding: 0.5rem 0.9rem;
     cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk';
+    letter-spacing: 0.2rem;
 }
 </style>
