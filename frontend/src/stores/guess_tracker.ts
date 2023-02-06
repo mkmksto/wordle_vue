@@ -22,6 +22,7 @@ export const useGuessTracker = defineStore('guessTracker', () => {
 
     /**
      * Used in coordination with game settings to change the number of letters for each row
+     * This function can be used to reset the `allGuesses$` array
      *
      * @param {number} newRowSize - passed from game settings (e.g. claps has a size of 5)
      */

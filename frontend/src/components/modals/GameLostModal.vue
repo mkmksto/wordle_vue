@@ -1,14 +1,15 @@
 <script setup lang="ts">
-function someFunc() {
-    console.log('dsadsadas')
-}
+import { useResetGame } from '@/composables/use_reset_game'
+// function someFunc() {
+//     console.log('dsadsadas')
+// }
 </script>
 
 <template>
     <div class="modal">
         <div class="modal-card">
             <span class="you-lose-msg">Game Over</span>
-            <button @click="someFunc">Restart</button>
+            <button @click="useResetGame">Restart</button>
         </div>
     </div>
 </template>
