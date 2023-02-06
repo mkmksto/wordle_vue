@@ -4,12 +4,14 @@ import { useGameState } from '@/stores/game_state'
 import GameBox from './components/GameBox.vue'
 import NavBar from './components/NavBar.vue'
 import GameLostModal from '@/components/modals/GameLostModal.vue'
+import GameWonModal from '@/components/modals/GameWonModal.vue'
 
 const gameState$ = useGameState()
 </script>
 
 <template>
     <GameLostModal v-if="gameState$.loseState$ === true" />
+    <GameWonModal v-if="gameState$.winState$ === true" />
     <NavBar />
     <main>
         <GameBox />
