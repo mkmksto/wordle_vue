@@ -77,20 +77,24 @@ function onEnter(): void {
     guessTracker$.currentIdx$++
 }
 
-function showTileColors(): void {
+async function showTileColors(): Promise<void> {
     // Get all letter tile divs, then filter only the current row
-    Array.from(document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>)
-        .filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
-        .forEach((tile, idx) => {
-            const letterAtIdx = currentGuess$.value[idx]
-            if (letterAtIdx.isLetterInWord && !letterAtIdx.isLetterInCorrectPosition) {
-                tile.classList.add('is-letter-in-word')
-            } else if (!letterAtIdx.isLetterInWord) {
-                tile.classList.add('is-letter-not-in-word')
-            } else if (letterAtIdx.isLetterInCorrectPosition) {
-                tile.classList.add('is-letter-in-correct-position')
-            }
-        })
+    const letterTiles = Array.from(
+        document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
+    ).filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
+
+    for (const [i, tile] of letterTiles.entries()) {
+        await new Promise((res) => setTimeout(res, 180))
+        const letterAtIdx = currentGuess$.value[i]
+
+        if (letterAtIdx.isLetterInWord && !letterAtIdx.isLetterInCorrectPosition) {
+            tile.classList.add('is-letter-in-word')
+        } else if (!letterAtIdx.isLetterInWord) {
+            tile.classList.add('is-letter-not-in-word')
+        } else if (letterAtIdx.isLetterInCorrectPosition) {
+            tile.classList.add('is-letter-in-correct-position')
+        }
+    }
 }
 </script>
 
