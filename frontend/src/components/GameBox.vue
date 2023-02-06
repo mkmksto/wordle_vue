@@ -46,33 +46,41 @@ function onKeyDown(e: KeyboardEvent): void {
 }
 
 async function onEnter(): Promise<void> {
-    if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
-    if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
-        // TODO: show temporary modal (i.e. invalid guess)
-        console.log('sorry, invalid guess')
-        // TODO: check some backend API if the word is fairly common (frequency)
-        return
-    }
-    await showTileColors()
-    if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
-        console.log('a winnnar is YOUUUU')
-        // TODO: show you win modal
-        allowInput_.value = false
-        winState$.value = true
-        loseState$.value = false
-        return
-    }
+    allowInput_.value = false
+    try {
+        if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
+        if (
+            !allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))
+        ) {
+            // TODO: show temporary modal (i.e. invalid guess)
+            console.log('sorry, invalid guess')
+            // TODO: check some backend API if the word is fairly common (frequency)
+            return
+        }
+        await showTileColors()
+        if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
+            console.log('a winnnar is YOUUUU')
+            // TODO: show you win modal
+            allowInput_.value = false
+            winState$.value = true
+            loseState$.value = false
+            return
+        }
 
-    if (
-        isAllRowsFilled$ &&
-        !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
-        currentIdx$.value === 5
-    ) {
-        allowInput_.value = false
-        winState$.value = false
-        loseState$.value = true
+        if (
+            isAllRowsFilled$ &&
+            !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
+            currentIdx$.value === 5
+        ) {
+            allowInput_.value = false
+            winState$.value = false
+            loseState$.value = true
+        }
+        guessTracker$.currentIdx$++
+    } catch (e) {
+    } finally {
+        allowInput_.value = true
     }
-    guessTracker$.currentIdx$++
 }
 
 async function showTileColors(): Promise<void> {
