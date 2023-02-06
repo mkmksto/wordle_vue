@@ -12,7 +12,7 @@ const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
 const gameState$ = useGameState()
-const { winState$, loseState$ } = storeToRefs(gameState$)
+const { winState$, loseState$, showInvalidGuessModal$ } = storeToRefs(gameState$)
 
 const randomWord$ = useRandomWord()
 const { currentRandomWord$ } = randomWord$
@@ -52,8 +52,9 @@ async function onEnter(): Promise<void> {
         if (
             !allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))
         ) {
-            // TODO: show temporary modal (i.e. invalid guess)
-            console.log('sorry, invalid guess')
+            showInvalidGuessModal$.value = true
+            await new Promise((res) => setTimeout(res, 1000))
+            showInvalidGuessModal$.value = false
             // TODO: check some backend API if the word is fairly common (frequency)
             return
         }
@@ -76,6 +77,7 @@ async function onEnter(): Promise<void> {
         }
         guessTracker$.currentIdx$++
     } catch (e) {
+        console.error(e)
     } finally {
         allowInput_.value = true
     }

@@ -5,13 +5,18 @@ import GameBox from './components/GameBox.vue'
 import NavBar from './components/NavBar.vue'
 import GameLostModal from '@/components/modals/GameLostModal.vue'
 import GameWonModal from '@/components/modals/GameWonModal.vue'
+import InvalidGuessModal from '@/components/modals/InvalidGuessModal.vue'
+import { storeToRefs } from 'pinia'
 
 const gameState$ = useGameState()
+const { showInvalidGuessModal$ } = storeToRefs(gameState$)
 </script>
 
 <template>
+    <!-- === true because sometimes the value can be null?? not sure, can't remember -->
     <GameLostModal v-if="gameState$.loseState$ === true" />
     <GameWonModal v-if="gameState$.winState$ === true" />
+    <InvalidGuessModal v-if="showInvalidGuessModal$" />
     <NavBar />
     <main>
         <GameBox />
