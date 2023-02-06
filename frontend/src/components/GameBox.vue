@@ -24,9 +24,7 @@ const { allGuesses$, currentIdx$, currentGuess$, isAllRowsFilled$ } =
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
-    window.addEventListener('keydown', (e) => {
-        onKeyDown(e)
-    })
+    window.addEventListener('keydown', (e) => onKeyDown(e))
 
     await renewCurrentWord$(gameSettings$.value)
     console.log('*****current random word: ', currentRandomWord$)
@@ -35,6 +33,7 @@ onMounted(async () => {
 const allowInput_ = ref<boolean>(true)
 
 function onKeyDown(e: KeyboardEvent): void {
+    e.preventDefault()
     if (!allowInput_.value) return
     if (/^[a-zA-Z]$/.test(e.key)) {
         guessTracker$.addLetterToGuess$(e.key, randomWord$.currentRandomWord$)
@@ -46,7 +45,7 @@ function onKeyDown(e: KeyboardEvent): void {
     console.log('***keyboard press***')
 }
 
-function onEnter(): void {
+async function onEnter(): Promise<void> {
     if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
     if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
         // TODO: show temporary modal (i.e. invalid guess)
@@ -54,7 +53,7 @@ function onEnter(): void {
         // TODO: check some backend API if the word is fairly common (frequency)
         return
     }
-    showTileColors()
+    await showTileColors()
     if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
         console.log('a winnnar is YOUUUU')
         // TODO: show you win modal
@@ -69,8 +68,7 @@ function onEnter(): void {
         !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
         currentIdx$.value === 5
     ) {
-        // console.log('!!!!! u lose i guess')
-        // console.log(allGuesses$.value[4].every((l) => !l.isBlank))
+        allowInput_.value = false
         winState$.value = false
         loseState$.value = true
     }
