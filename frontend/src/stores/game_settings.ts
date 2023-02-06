@@ -11,5 +11,10 @@ export const useGameSettings = defineStore('gameSettings', () => {
         gameSettings$.num_chars = newSize
     }
 
-    return { gameSettings$, changeNumChars$ }
+    function resetGameSetting$(): void {
+        gameSettings$.num_chars = 5
+        gameSettings$.difficulty = 'medium'
+    }
+
+    return { gameSettings$, changeNumChars$, resetGameSetting$ }
 })
