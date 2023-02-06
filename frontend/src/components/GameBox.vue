@@ -59,8 +59,6 @@ async function onEnter(): Promise<void> {
         }
         await showTileColors()
         if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
-            console.log('a winnnar is YOUUUU')
-            // TODO: show you win modal
             allowInput_.value = false
             winState$.value = true
             loseState$.value = false
