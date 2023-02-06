@@ -29,7 +29,7 @@ function someFunc() {
 .modal-card {
     width: 24rem;
     height: 20rem;
-    background-color: rgb(220, 220, 220);
+    background-color: rgb(250, 250, 250);
     color: black;
     display: flex;
     flex-direction: column;
@@ -37,6 +37,8 @@ function someFunc() {
     justify-content: space-between;
     border-radius: 1rem;
     font-size: 2rem;
+    transform: translate(20px, -100px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
 }
 
 .you-lose-msg {
@@ -44,9 +46,9 @@ function someFunc() {
 }
 
 button {
-    background-color: white;
+    background-color: rgb(70, 70, 70);
     bottom: 0.25rem;
-    color: rgb(80, 80, 80);
+    color: rgb(245, 245, 245);
     font-size: 1.5rem;
     font-family: 'Space Grotesk';
     margin-bottom: 1.5rem;
