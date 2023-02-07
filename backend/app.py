@@ -37,17 +37,41 @@ def get_random_word():
 
     num_chars: int = frontend_settings.get('num_chars', 6)
     diff: str = frontend_settings.get('difficulty', 'medium')
-    difficulty: int = game_settings.diff_map.get(diff, 0.1)
+    difficulty: float = game_settings.diff_map.get(diff, 0.1)
 
     while True:
         print('*****FETCHING*****')
         rand_word: str = english_dict.get_random_word()
-        frequency: float = english_dict.get_frequency(rand_word) or 0.1
+        frequency: float = english_dict.get_frequency(rand_word) or difficulty
         if len(rand_word) == num_chars and frequency >= difficulty:
             break
 
-    print('************ FINAL random word: ', rand_word)
+    print('************ FINAL random word: ', rand_word, '**FREQ: ', frequency)
     return {'word': rand_word}
+
+
+@app.route('/api/test_if_guess_is_valid', methods=['GET', 'POST'])
+def test_if_guess_is_valid():
+    frontend_data: dict[str, Any] | None = request.get_json() or {}
+
+    current_guess: str | None = frontend_data.get('currentGuess')
+    diff = frontend_data.get('difficulty', 'medium')
+    current_difficulty: float = game_settings.diff_map.get(diff, 0.1)
+
+    print('->> current difficulty: ', current_difficulty)
+    # print(f'current guess: {current_guess}')
+
+    guess_frequency: float | None = english_dict.get_frequency(current_guess)
+    print('***frequency of guess: ', guess_frequency)
+
+    if guess_frequency is None:
+        return {'validity': False}
+    if current_guess is None:
+        return {'validity': False}
+    if float(guess_frequency) >= float(current_difficulty):
+        return {'validity': True}
+
+    return {'validity': False}
 
 
 if __name__ == "__main__":
