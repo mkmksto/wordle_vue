@@ -8,6 +8,9 @@ import { useGuessTracker } from '../stores/guess_tracker'
 import { useGameState } from '@/stores/game_state'
 import { allowedGuesses } from '@/modules/allowed_guesses'
 
+import Keyboard from 'simple-keyboard'
+import 'simple-keyboard/build/css/index.css'
+
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
@@ -19,11 +22,31 @@ const { currentRandomWord$ } = randomWord$
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
-const { allGuesses$, currentIdx$, currentGuess$, isAllRowsFilled$ } =
-    storeToRefs(guessTracker$)
+const {
+    allGuesses$,
+    currentIdx$,
+    currentGuess$,
+    isAllRowsFilled$,
+    lettersInWord$,
+    lettersNotInWord$,
+    lettersInCorrectPosition$,
+} = storeToRefs(guessTracker$)
+
+const keyboard_ = ref<Keyboard | null>(null)
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
+    keyboard_.value = new Keyboard('simple-keyboard', {
+        layout: {
+            default: [
+                'q w e r t y u i o p',
+                'a s d f g h j k l',
+                '{enter} z x c v b n m {bksp}',
+            ],
+        },
+        onKeyPress: onVirtualKeypress,
+    })
+
     window.addEventListener('keydown', (e) => onKeyDown(e))
 
     await renewCurrentWord$(gameSettings$.value)
@@ -32,14 +55,22 @@ onMounted(async () => {
 
 const allowInput_ = ref<boolean>(true)
 
+function onVirtualKeypress(btn: string) {
+    handleInput(btn)
+}
+
 function onKeyDown(e: KeyboardEvent): void {
     e.preventDefault()
+    handleInput(e.key)
+}
+
+function handleInput(key: string) {
     if (!allowInput_.value) return
-    if (/^[a-zA-Z]$/.test(e.key)) {
-        guessTracker$.addLetterToGuess$(e.key, randomWord$.currentRandomWord$)
-    } else if (e.key === 'Backspace') {
+    if (/^[a-zA-Z]$/.test(key)) {
+        guessTracker$.addLetterToGuess$(key, randomWord$.currentRandomWord$)
+    } else if (key === 'Backspace' || key === '{bksp}') {
         guessTracker$.removeLastLetterFromGuess$()
-    } else if (e.key === 'Enter') {
+    } else if (key === 'Enter' || key === '{enter}') {
         onEnter()
     }
     console.log('***keyboard press***')
@@ -59,6 +90,7 @@ async function onEnter(): Promise<void> {
             return
         }
         await showTileColors()
+        await showKeyboardColors()
         if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
             allowInput_.value = false
             winState$.value = true
@@ -81,6 +113,20 @@ async function onEnter(): Promise<void> {
     } finally {
         allowInput_.value = true
     }
+}
+
+async function showKeyboardColors(): Promise<void> {
+    console.log(lettersInWord$.value.join(' '))
+    keyboard_.value?.addButtonTheme(lettersInWord$.value.join(' '), 'is-letter-in-word')
+    keyboard_.value?.addButtonTheme(
+        lettersNotInWord$.value.join(' '),
+        'is-letter-not-in-word'
+    )
+    keyboard_.value?.addButtonTheme(
+        lettersInCorrectPosition$.value.join(' '),
+        'is-letter-in-correct-position'
+    )
+    // keyboard_.value!.addButtonTheme('y z', 'black-bg')
 }
 
 async function showTileColors(): Promise<void> {
@@ -119,21 +165,22 @@ async function showTileColors(): Promise<void> {
                 </div>
             </div>
         </div>
+        <div class="simple-keyboard"></div>
     </div>
 </template>
 
 <style scoped>
 /* Dynamic Styles */
 .is-letter-in-word {
-    background-color: var(--letter-in-word);
+    background-color: var(--letter-in-word) !important;
 }
 
 .is-letter-not-in-word {
-    background-color: var(--letter-not-in-word);
+    background-color: var(--letter-not-in-word) !important;
 }
 
 .is-letter-in-correct-position {
-    background-color: var(--letter-in-correct-position);
+    background-color: var(--letter-in-correct-position) !important;
 }
 
 /* Static Styles */
@@ -187,6 +234,15 @@ async function showTileColors(): Promise<void> {
     width: 70%;
     border-radius: 3rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.simple-keyboard {
+    width: 450px;
+    /* height: 300px; */
+    margin-top: 5rem;
+    font-family: 'Space Grotesk';
 }
 </style>

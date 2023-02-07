@@ -54,6 +54,46 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         }
     }
 
+    const flattenedAllGuesses$: ComputedRef<LetterGuess[]> = computed(() => {
+        const newFlatArr: LetterGuess[] = []
+        allGuesses$.value.forEach((subarray) =>
+            subarray.forEach((letter) => newFlatArr.push(letter))
+        )
+        return newFlatArr
+    })
+
+    const lettersInWord$: ComputedRef<string[]> = computed(() => {
+        // use set to get only the unique elements
+        return Array.from(
+            new Set(
+                flattenedAllGuesses$.value
+                    .filter((l) => l.isLetterInWord && !l.isLetterInCorrectPosition)
+                    .map((l) => l.letter)
+            )
+        )
+    })
+
+    // guessed letters that are not anywhere in the word
+    const lettersNotInWord$: ComputedRef<string[]> = computed(() => {
+        return Array.from(
+            new Set(
+                flattenedAllGuesses$.value
+                    .filter((l) => !l.isLetterInWord)
+                    .map((l) => l.letter)
+            )
+        )
+    })
+
+    const lettersInCorrectPosition$: ComputedRef<string[]> = computed(() => {
+        return Array.from(
+            new Set(
+                flattenedAllGuesses$.value
+                    .filter((l) => l.isLetterInCorrectPosition)
+                    .map((l) => l.letter)
+            )
+        )
+    })
+
     function removeLastLetterFromGuess$(): void {
         const currentRow$ = allGuesses$.value[currentIdx$.value]
         const itemToRemove = [...currentRow$]
@@ -94,6 +134,9 @@ export const useGuessTracker = defineStore('guessTracker', () => {
         removeLastLetterFromGuess$,
         isAllRowsFilled$,
         isGuessCorrect$,
+        lettersInWord$,
+        lettersNotInWord$,
+        lettersInCorrectPosition$,
     }
 })
 
