@@ -6,7 +6,9 @@ import { useGameSettings } from '../stores/game_settings'
 import { useRandomWord } from '../stores/random_word'
 import { useGuessTracker } from '../stores/guess_tracker'
 import { useGameState } from '@/stores/game_state'
+
 import { allowedGuesses } from '@/modules/allowed_guesses'
+import { checkGuessValidity } from '@/modules/check_guess_validity'
 
 import Keyboard from 'simple-keyboard'
 import 'simple-keyboard/build/css/index.css'
@@ -76,21 +78,43 @@ function handleInput(key: string) {
     console.log('***keyboard press***')
 }
 
+async function isGuessValid(): Promise<boolean> {
+    if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
+        if (await isGuessInAPI()) {
+            console.log('guess is valid word')
+            return true
+        } else {
+            showInvalidGuessModal$.value = true
+            await new Promise((res) => setTimeout(res, 1000))
+            showInvalidGuessModal$.value = false
+            console.log('guess is not a valid word ')
+            return false
+        }
+    } else {
+        console.log('guess is a valid word')
+        return true
+    }
+}
+
+async function isGuessInAPI(): Promise<{ validity: boolean }> {
+    const backendRes = await checkGuessValidity(
+        gameSettings$.value.difficulty,
+        currentGuess$.value.map((l) => l.letter).join('')
+    )
+    return backendRes.validity
+}
+
 async function onEnter(): Promise<void> {
     allowInput_.value = false
     try {
         if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
-        if (
-            !allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))
-        ) {
-            showInvalidGuessModal$.value = true
-            await new Promise((res) => setTimeout(res, 1000))
-            showInvalidGuessModal$.value = false
-            // TODO: check some backend API if the word is fairly common (frequency)
-            return
-        }
+        if (!(await isGuessValid())) return
+        // if (!isGuessInAPI()) return
+
         await showTileColors()
         await showKeyboardColors()
+
+        // TODO: refactor
         if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
             allowInput_.value = false
             winState$.value = true
@@ -98,6 +122,7 @@ async function onEnter(): Promise<void> {
             return
         }
 
+        // TODO: refactor (checks if player has lost)
         if (
             isAllRowsFilled$ &&
             !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
@@ -107,6 +132,8 @@ async function onEnter(): Promise<void> {
             winState$.value = false
             loseState$.value = true
         }
+
+        // if code has reached this line without retuning, increment current row idx
         guessTracker$.currentIdx$++
     } catch (e) {
         console.error(e)
@@ -116,7 +143,6 @@ async function onEnter(): Promise<void> {
 }
 
 async function showKeyboardColors(): Promise<void> {
-    console.log(lettersInWord$.value.join(' '))
     keyboard_.value?.addButtonTheme(lettersInWord$.value.join(' '), 'is-letter-in-word')
     keyboard_.value?.addButtonTheme(
         lettersNotInWord$.value.join(' '),
