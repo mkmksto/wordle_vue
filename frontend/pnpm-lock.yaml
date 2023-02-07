@@ -18,6 +18,7 @@ specifiers:
   npm-run-all: ^4.1.5
   pinia: ^2.0.28
   prettier: ^2.7.1
+  simple-keyboard: ^3.5.21
   typescript: ~4.7.4
   uuid: ^9.0.0
   vite: ^4.0.0
@@ -31,6 +32,7 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 6.2.1
   '@fortawesome/vue-fontawesome': 3.0.3_bd5ipvhrqmkjz6wvo6sgrei224
   pinia: 2.0.29_e7lp6ggkpgyi5vqd44m2kxvk6i
+  simple-keyboard: 3.5.21
   uuid: 9.0.0
   vue: 3.2.45
 
@@ -2038,6 +2040,10 @@ packages:
       get-intrinsic: 1.2.0
       object-inspect: 1.12.3
     dev: true
+
+  /simple-keyboard/3.5.21:
+    resolution: {integrity: sha512-49cp1LBcMpLyVuey6Wuqr3EoXwT8GLDA5b8dZDS2Jtk8VI4K9bQ9GnTH6LRekDMBjkMRh62mXDcouzN6ESroCg==}
+    dev: false
 
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
