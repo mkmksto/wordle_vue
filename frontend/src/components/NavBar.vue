@@ -1,5 +1,10 @@
 <script setup lang="ts">
-console.log('hello from nav')
+import { useModalState } from '@/stores/modal_states'
+function showGameInfo() {
+    //
+}
+
+const modalStates$ = useModalState()
 </script>
 
 <template>
@@ -9,11 +14,11 @@ console.log('hello from nav')
                 <fa icon="fa-solid fa-bars"></fa>
             </li>
 
-            <li class="header">
+            <li class="header" @click="showGameInfo">
                 <fa icon="fa-solid fa-circle-info"></fa>
             </li>
 
-            <li class="header">
+            <li class="header" @click="modalStates$.showSettingsModal$ = true">
                 <fa icon="fa-solid fa-gear"></fa>
             </li>
         </ul>
@@ -23,6 +28,18 @@ console.log('hello from nav')
 </template>
 
 <style scoped>
+.settings {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    z-index: 100;
+}
+
 nav {
     position: fixed;
     height: 100vh;
