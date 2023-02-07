@@ -39,27 +39,36 @@ const { gameSettings$ } = storeToRefs(settings$)
                 </select>
             </div>
 
-            <button class="save" @click="modalStates$.showSettingsModal$ = false">
-                Save but don't Restart
-            </button>
-            <button
-                class="restart"
-                @click="useResetGame(), (modalStates$.showSettingsModal$ = false)"
-            >
-                Save and Restart
-            </button>
+            <div class="btn-save-container">
+                <button class="save" @click="modalStates$.showSettingsModal$ = false">
+                    Save
+                </button>
+
+                <button @click="settings$.resetGameSetting$()" class="reset-settings">
+                    Reset Settings
+                </button>
+
+                <button
+                    class="restart"
+                    @click="useResetGame(), (modalStates$.showSettingsModal$ = false)"
+                >
+                    Save and Restart
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.save {
+.btn-save-container {
     margin-top: auto;
+    width: 100%;
+    display: flex;
 }
 
 label {
-    font-family: 'Space Grotesk';
-    letter-spacing: 0.071rem;
+    font-size: 1.1rem;
+    letter-spacing: 0.061rem;
 }
 /* ------- */
 .setting {
@@ -126,7 +135,6 @@ option {
 
 /* ----- */
 button {
-    width: 100%;
     margin-top: 0.4rem;
     font-family: 'Space Grotesk';
     font-size: 1rem;
@@ -139,5 +147,10 @@ button {
 .restart {
     background-color: var(--main-color);
     color: white;
+}
+
+.reset-settings {
+    margin-left: auto;
+    margin-right: 0.4rem;
 }
 </style>
