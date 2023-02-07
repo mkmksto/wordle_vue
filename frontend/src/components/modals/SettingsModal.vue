@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { useModalState } from '@/stores/modal_states'
+import { useGameSettings } from '@/stores/game_settings'
 import { useResetGame } from '@/composables/use_reset_game'
 
+import { storeToRefs } from 'pinia'
+
 const modalStates$ = useModalState()
+const settings$ = useGameSettings()
+const { gameSettings$ } = storeToRefs(settings$)
 </script>
 
 <template>
@@ -11,14 +16,21 @@ const modalStates$ = useModalState()
             <div class="setting">
                 <label for="min-chars">Number of Letters</label>
 
-                <input type="range" min="6" max="10" class="range" id="min-chars" />
+                <input
+                    v-model.number="gameSettings$.num_chars"
+                    type="range"
+                    min="5"
+                    max="9"
+                    class="range"
+                    id="min-chars"
+                />
 
-                <span class="label-val">(5)</span>
+                <span class="label-val">{{ gameSettings$.num_chars }}</span>
             </div>
 
             <div class="setting">
                 <label for="difficulty">Difficulty</label>
-                <select id="difficulty">
+                <select v-model="gameSettings$.difficulty" id="difficulty">
                     <option selected>Medium</option>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -27,8 +39,15 @@ const modalStates$ = useModalState()
                 </select>
             </div>
 
-            <button class="save" @click="">Save but don't Restart</button>
-            <button class="restart" @click="">Save and Restart</button>
+            <button class="save" @click="modalStates$.showSettingsModal$ = false">
+                Save but don't Restart
+            </button>
+            <button
+                class="restart"
+                @click="useResetGame(), (modalStates$.showSettingsModal$ = false)"
+            >
+                Save and Restart
+            </button>
         </div>
     </div>
 </template>
@@ -114,6 +133,7 @@ button {
     padding: 0.4rem;
     border-radius: 0.4rem;
     border: none;
+    cursor: pointer;
 }
 
 .restart {

@@ -107,7 +107,7 @@ async function showTileColors(): Promise<void> {
 <template>
     <div class="game-box">
         <div class="words-container">
-            <div v-for="(wordGuess, idx) in allGuesses$" class="word">
+            <div v-for="(wordGuess, idx) in allGuesses$" :key="idx" class="word">
                 <!-- row-id will be used for toggling the colors in that row -->
                 <div
                     v-for="{ id, letter } in wordGuess"
@@ -142,15 +142,19 @@ async function showTileColors(): Promise<void> {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 400px;
-    height: 460px;
+    /* min-width: 400px; */
+    width: fit-content;
+    height: fit-content;
+    /* min-height: 460px; */
     margin-top: 4rem;
+    gap: 0.7rem;
 }
 
 .word {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    gap: 0.9rem;
 }
 
 .letter {
