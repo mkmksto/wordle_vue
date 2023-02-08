@@ -19,46 +19,16 @@
 
 ### Do this (current TODOs)
 
-- fix your guess store
-- `addLetterToGuess` should have checks before adding the item to the `allGuesses` array.
-  - check if letter is in word
-  - check if letter is in the correct position
-  - isBlank
-- implement keyboard input and deleting letters from guess
-- implement guess testing by pressing enter
-- !!!(IMPORTANT) (left off at `guess_tracker.ts`, line `35`)
+(last part)
 
-#### Stores
+- add letter color animations
+- info modal
+- Improve color palette
+- check all `TODO`s using `telescope`
+- burger menu shows my other projects
 
-##### Guess Store
+### Important Notes
 
-- main property must be an object containing the following properties
-  - isLetterInWord (yellow) (but wrong position) (else: color: grey)
-  - isLetterInCorrectPosition (green)
-  - isBlank (no input yet from user, blank state when loading game)
-- might need a `currentGuessIdx` why? Because we'll start with 25 boilerplate, unfilled `LetterGuess` objects (see interface).
-
-##### Game state store
-
-- see `vue_text_twist`
-- might not be needed, i might only need something like `hasWordBeenGuessed` prop inside `guess_tracker.ts` and something that watches it then shows a modal when i win
-
-#### Cells
-
-- each cell has three classes to be used for coloring
-
-1. Normal (maybe no need to create this)
-2. `incorrect-guess`: white text on blackish bg
-3. `correct-guess`: black text on white bg
-
-#### Keyboard
-
-- update this
-- layout this probably like this:
-- each keyboard row is a `display: flex` (row)
-- each of those have a top and bottom border (probably black)
-- then apply highlighting
-
-#### Game Settings
-
-- update this
+- Had a problem where when `onEnter` runs (from `GameBox.vue`), any word you test would result in all the tiles greyed out. The problem had to do with incorrectly placed (probably) async return types and missing? `await` keywords.
+- also found out that i can't (or at least it won't work proerply) use async/await inside a `forEach` loop, i'd have to settle with regular for loops or `for of` loops.
+- vue with `eslintrc` config guide found [here](https://eslint.vuejs.org/user-guide/#bundle-configurations)
