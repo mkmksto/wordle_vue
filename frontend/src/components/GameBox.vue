@@ -2,9 +2,9 @@
 import { storeToRefs } from 'pinia'
 import { onMounted, ref } from 'vue'
 
-import { useGameSettings } from '../stores/game_settings'
-import { useRandomWord } from '../stores/random_word'
-import { useGuessTracker } from '../stores/guess_tracker'
+import { useGameSettings } from '@/stores/game_settings'
+import { useRandomWord } from '@/stores/random_word'
+import { useGuessTracker } from '@/stores/guess_tracker'
 import { useGameState } from '@/stores/game_state'
 
 import { allowedGuesses } from '@/modules/allowed_guesses'
