@@ -34,6 +34,8 @@ const {
     lettersInCorrectPosition$,
 } = storeToRefs(guessTracker$)
 
+const allowInput_ = ref<boolean>(false)
+
 const keyboard_ = ref<Keyboard | null>(null)
 
 onMounted(async () => {
@@ -52,10 +54,9 @@ onMounted(async () => {
     window.addEventListener('keydown', (e) => onKeyDown(e))
 
     await renewCurrentWord$(gameSettings$.value)
+    allowInput_.value = true
     console.log('*****current random word: ', currentRandomWord$)
 })
-
-const allowInput_ = ref<boolean>(true)
 
 function onVirtualKeypress(btn: string) {
     handleInput(btn)
@@ -127,6 +128,7 @@ async function onEnter(): Promise<void> {
             allowInput_.value = false
             winState$.value = false
             loseState$.value = true
+            return
         }
 
         // if code has reached this line without retuning, increment current row idx
@@ -148,7 +150,6 @@ async function showKeyboardColors(): Promise<void> {
         lettersInCorrectPosition$.value.join(' '),
         'is-letter-in-correct-position'
     )
-    // keyboard_.value!.addButtonTheme('y z', 'black-bg')
 }
 
 async function showTileColors(): Promise<void> {
@@ -202,18 +203,6 @@ async function showTileColors(): Promise<void> {
     color: white;
     margin-top: 1rem;
     font-family: 'Space Grotesk';
-}
-
-.is-letter-in-word {
-    background-color: var(--letter-in-word) !important;
-}
-
-.is-letter-not-in-word {
-    background-color: var(--letter-not-in-word) !important;
-}
-
-.is-letter-in-correct-position {
-    background-color: var(--letter-in-correct-position) !important;
 }
 
 /* Static Styles */
@@ -273,9 +262,39 @@ async function showTileColors(): Promise<void> {
 }
 
 .simple-keyboard {
-    width: 450px;
-    /* height: 300px; */
+    width: 570px;
+    /* height: 400px; */
     margin-top: 5rem;
-    font-family: 'Space Grotesk';
+    font-family: 'Space Grotesk' !important;
+    font-weight: 700;
+    font-size: 1.2rem;
+    background-color: transparent;
+    color: white;
+}
+</style>
+
+<style>
+/* having this scoped would cause problems with the classes now showing up for the keyboard */
+.hg-button {
+    background-color: transparent !important;
+    font-weight: bold !important;
+    color: white !important;
+    border: none !important;
+    height: 45px !important;
+}
+
+.is-letter-in-word {
+    background-color: var(--letter-in-word) !important;
+    color: white;
+}
+
+.is-letter-not-in-word {
+    background-color: var(--letter-not-in-word) !important;
+    color: white;
+}
+
+.is-letter-in-correct-position {
+    background-color: var(--letter-in-correct-position) !important;
+    color: white;
 }
 </style>
