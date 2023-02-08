@@ -21,8 +21,7 @@ class EnglishDict:
         return random.choice(self._word).lower()
 
     def get_frequency(self, word: str) -> float | None:
-        """[TODO:summary]
-
+        """
         Return the frequency (per million) for a particular word
 
         Args:
