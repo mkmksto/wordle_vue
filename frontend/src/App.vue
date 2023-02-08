@@ -2,8 +2,8 @@
 import { useGameState } from '@/stores/game_state'
 import { useModalState } from '@/stores/modal_states'
 
-import GameBox from './components/GameBox.vue'
-import NavBar from './components/NavBar.vue'
+import GameBox from '@/components/GameBox.vue'
+import NavBar from '@/components/NavBar.vue'
 import GameLostModal from '@/components/modals/GameLostModal.vue'
 import GameWonModal from '@/components/modals/GameWonModal.vue'
 import InvalidGuessModal from '@/components/modals/InvalidGuessModal.vue'

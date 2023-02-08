@@ -1,7 +1,7 @@
 export async function checkGuessValidity(
     difficulty: string,
     currentGuess: string
-): Promise<object> {
+): Promise<{ validity: boolean }> {
     const fetchUrl = window.location.href.includes('vercel')
         ? '/api/test_if_guess_is_valid'
         : 'http://127.0.0.1:5000/api/test_if_guess_is_valid'

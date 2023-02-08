@@ -54,7 +54,6 @@ nav {
     margin-top: 6rem;
     writing-mode: vertical-rl;
     text-orientation: upright;
-    /* color: var(--main-text-color); */
     font-family: 'Space Grotesk';
     font-size: 2.5rem;
     font-weight: 500;
@@ -72,6 +71,5 @@ ul {
 li {
     font-size: 1.7rem;
     cursor: pointer;
-    /* color: var(--main-text-color); */
 }
 </style>

@@ -81,22 +81,19 @@ function handleInput(key: string) {
 async function isGuessValid(): Promise<boolean> {
     if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
         if (await isGuessInAPI()) {
-            console.log('guess is valid word')
             return true
         } else {
             showInvalidGuessModal$.value = true
             await new Promise((res) => setTimeout(res, 1000))
             showInvalidGuessModal$.value = false
-            console.log('guess is not a valid word ')
             return false
         }
     } else {
-        console.log('guess is a valid word')
         return true
     }
 }
 
-async function isGuessInAPI(): Promise<{ validity: boolean }> {
+async function isGuessInAPI(): Promise<boolean> {
     const backendRes = await checkGuessValidity(
         gameSettings$.value.difficulty,
         currentGuess$.value.map((l) => l.letter).join('')
@@ -109,7 +106,6 @@ async function onEnter(): Promise<void> {
     try {
         if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
         if (!(await isGuessValid())) return
-        // if (!isGuessInAPI()) return
 
         await showTileColors()
         await showKeyboardColors()
