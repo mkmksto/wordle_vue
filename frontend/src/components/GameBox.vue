@@ -211,10 +211,8 @@ async function showTileColors(): Promise<void> {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    /* min-width: 400px; */
     width: fit-content;
     height: fit-content;
-    /* min-height: 460px; */
     margin-top: 4rem;
     gap: 0.7rem;
 }
@@ -257,13 +255,11 @@ async function showTileColors(): Promise<void> {
     border-radius: 3rem;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     align-items: center;
 }
 
 .simple-keyboard {
     width: 570px;
-    /* height: 400px; */
     margin-top: 5rem;
     font-family: 'Space Grotesk' !important;
     font-weight: 700;
