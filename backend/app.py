@@ -29,11 +29,11 @@ def index():
 
 @app.route('/api/random_word', methods=['GET', 'POST'])
 def get_random_word():
-    # TODO: define the shape of the dictionary based on what you'll pass to this endpoint
+    # shape: {'num_chars': int, 'difficulty': str}
     frontend_settings: dict[str, Any] | None = request.get_json() or {}
-    # frontend_settings: dict[str, Any] | None = {}
-    # if not frontend_settings:
-    #     return ('', 504)
+
+    if not frontend_settings:
+        return ('', 504)
 
     num_chars: int = frontend_settings.get('num_chars', 6)
     diff: str = frontend_settings.get('difficulty', 'medium')
