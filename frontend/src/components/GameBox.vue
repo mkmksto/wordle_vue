@@ -20,7 +20,7 @@ const gameState$ = useGameState()
 const { winState$, loseState$, showInvalidGuessModal$ } = storeToRefs(gameState$)
 
 const randomWord$ = useRandomWord()
-const { currentRandomWord$ } = randomWord$
+const { currentRandomWord$ } = storeToRefs(randomWord$)
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
@@ -69,7 +69,7 @@ function onKeyDown(e: KeyboardEvent): void {
 function handleInput(key: string) {
     if (!allowInput_.value) return
     if (/^[a-zA-Z]$/.test(key)) {
-        guessTracker$.addLetterToGuess$(key, randomWord$.currentRandomWord$)
+        guessTracker$.addLetterToGuess$(key, currentRandomWord$.value)
     } else if (key === 'Backspace' || key === '{bksp}') {
         guessTracker$.removeLastLetterFromGuess$()
     } else if (key === 'Enter' || key === '{enter}') {
@@ -111,7 +111,7 @@ async function onEnter(): Promise<void> {
         await showKeyboardColors()
 
         // TODO: refactor
-        if (guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$)) {
+        if (guessTracker$.isGuessCorrect$(currentRandomWord$.value)) {
             allowInput_.value = false
             winState$.value = true
             loseState$.value = false
@@ -121,7 +121,7 @@ async function onEnter(): Promise<void> {
         // TODO: refactor (checks if player has lost)
         if (
             isAllRowsFilled$ &&
-            !guessTracker$.isGuessCorrect$(randomWord$.currentRandomWord$) &&
+            !guessTracker$.isGuessCorrect$(currentRandomWord$.value) &&
             currentIdx$.value === 5
         ) {
             allowInput_.value = false
@@ -187,12 +187,23 @@ async function showTileColors(): Promise<void> {
                 </div>
             </div>
         </div>
+        <div v-if="currentRandomWord$" class="fetching"></div>
+        <div v-else class="fetching">...fetching</div>
         <div class="simple-keyboard"></div>
     </div>
 </template>
 
 <style scoped>
 /* Dynamic Styles */
+
+.fetching {
+    height: 1.5rem;
+    font-size: 1.3rem;
+    color: white;
+    margin-top: 1rem;
+    font-family: 'Space Grotesk';
+}
+
 .is-letter-in-word {
     background-color: var(--letter-in-word) !important;
 }
