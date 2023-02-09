@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 
 import { useGameSettings } from '@/stores/game_settings'
 import { useRandomWord } from '@/stores/random_word'
@@ -11,14 +11,14 @@ import { useKeyboard } from '@/stores/simple_keyboard'
 import { allowedGuesses } from '@/modules/allowed_guesses'
 import { checkGuessValidity } from '@/modules/check_guess_validity'
 
-// import Keyboard from 'simple-keyboard'
 import 'simple-keyboard/build/css/index.css'
 
 const settings$ = useGameSettings()
 const { gameSettings$ } = storeToRefs(settings$)
 
 const gameState$ = useGameState()
-const { winState$, loseState$, showInvalidGuessModal$ } = storeToRefs(gameState$)
+const { winState$, loseState$, allowInput$, showInvalidGuessModal$ } =
+    storeToRefs(gameState$)
 
 const randomWord$ = useRandomWord()
 const { currentRandomWord$ } = storeToRefs(randomWord$)
@@ -27,8 +27,6 @@ const { renewCurrentWord$ } = randomWord$
 const guessTracker$ = useGuessTracker()
 const { allGuesses$, currentIdx$, currentGuess$, isAllRowsFilled$ } =
     storeToRefs(guessTracker$)
-
-const allowInput_ = ref<boolean>(false)
 
 const keyboard$ = useKeyboard()
 const { simpleKeyboard$ } = storeToRefs(keyboard$)
@@ -42,7 +40,7 @@ onMounted(async () => {
     window.addEventListener('keydown', (e) => onKeyDown(e))
 
     await renewCurrentWord$(gameSettings$.value)
-    allowInput_.value = true
+    allowInput$.value = true
     console.log('*****current random word: ', currentRandomWord$)
 })
 
@@ -56,7 +54,7 @@ function onKeyDown(e: KeyboardEvent): void {
 }
 
 function handleInput(key: string) {
-    if (!allowInput_.value) return
+    if (!allowInput$.value || !currentRandomWord$.value) return
     if (/^[a-zA-Z]$/.test(key)) {
         guessTracker$.addLetterToGuess$(key, currentRandomWord$.value)
     } else if (key === 'Backspace' || key === '{bksp}') {
@@ -91,7 +89,7 @@ async function isGuessInAPI(): Promise<boolean> {
 }
 
 async function onEnter(): Promise<void> {
-    allowInput_.value = false
+    allowInput$.value = false
     try {
         if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
         if (!(await isGuessValid())) return
@@ -99,22 +97,16 @@ async function onEnter(): Promise<void> {
         await showTileColors()
         await keyboard$.showKeyboardColors()
 
-        // TODO: refactor
-        if (guessTracker$.isGuessCorrect$(currentRandomWord$.value)) {
+        if (await hasUserWon()) {
+            allowInput$.value = false
             await sleep(1000)
-            allowInput_.value = false
             winState$.value = true
             loseState$.value = false
             return
         }
 
-        // TODO: refactor (checks if player has lost)
-        if (
-            isAllRowsFilled$ &&
-            !guessTracker$.isGuessCorrect$(currentRandomWord$.value) &&
-            currentIdx$.value === 5
-        ) {
-            allowInput_.value = false
+        if (hasUserLost()) {
+            allowInput$.value = false
             winState$.value = false
             loseState$.value = true
             return
@@ -125,7 +117,24 @@ async function onEnter(): Promise<void> {
     } catch (e) {
         console.error(e)
     } finally {
-        allowInput_.value = true
+        allowInput$.value = true
+    }
+}
+
+async function hasUserWon(): Promise<boolean> {
+    if (!guessTracker$.isGuessCorrect$(currentRandomWord$.value)) return false
+    return true
+}
+
+function hasUserLost(): boolean {
+    if (
+        isAllRowsFilled$ &&
+        !guessTracker$.isGuessCorrect$(currentRandomWord$.value) &&
+        currentIdx$.value === 5
+    ) {
+        return true
+    } else {
+        return false
     }
 }
 

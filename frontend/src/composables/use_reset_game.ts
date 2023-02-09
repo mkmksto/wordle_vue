@@ -10,12 +10,16 @@ export async function useResetGame() {
     await nextTick()
 
     const gameState$ = useGameState()
+    const { allowInput$ } = storeToRefs(gameState$)
+
     const guessTracker$ = useGuessTracker()
     const { currentIdx$ } = storeToRefs(guessTracker$)
 
     const gameSettings$ = useGameSettings()
     const randomWord$ = useRandomWord()
     const keyboard$ = useKeyboard()
+
+    allowInput$.value = false
 
     gameState$.resetGameState$()
     keyboard$.removeKeyboardColors$()
@@ -26,4 +30,5 @@ export async function useResetGame() {
 
     randomWord$.clearCurrentWord$()
     randomWord$.renewCurrentWord$(gameSettings$.gameSettings$)
+    allowInput$.value = true
 }
