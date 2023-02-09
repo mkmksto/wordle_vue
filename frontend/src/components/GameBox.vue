@@ -85,7 +85,7 @@ async function isGuessValid(): Promise<boolean> {
             return true
         } else {
             showInvalidGuessModal$.value = true
-            await new Promise((res) => setTimeout(res, 1000))
+            await sleep(1000)
             showInvalidGuessModal$.value = false
             return false
         }
@@ -113,6 +113,7 @@ async function onEnter(): Promise<void> {
 
         // TODO: refactor
         if (guessTracker$.isGuessCorrect$(currentRandomWord$.value)) {
+            await sleep(1000)
             allowInput_.value = false
             winState$.value = true
             loseState$.value = false
@@ -159,7 +160,7 @@ async function showTileColors(): Promise<void> {
     ).filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
 
     for (const [i, tile] of letterTiles.entries()) {
-        await new Promise((res) => setTimeout(res, 180))
+        await sleep(350)
         const letterAtIdx = currentGuess$.value[i]
 
         if (letterAtIdx.isLetterInWord && !letterAtIdx.isLetterInCorrectPosition) {
@@ -170,6 +171,10 @@ async function showTileColors(): Promise<void> {
             tile.classList.add('is-letter-in-correct-position')
         }
     }
+}
+
+async function sleep(ms: number): Promise<void> {
+    return new Promise((res) => setTimeout(res, ms))
 }
 </script>
 
@@ -278,7 +283,6 @@ async function showTileColors(): Promise<void> {
 .hg-button {
     background-color: transparent !important;
     font-weight: bold !important;
-    /* color: black !important; */
     border: none !important;
     height: 45px !important;
 }
@@ -286,15 +290,18 @@ async function showTileColors(): Promise<void> {
 .is-letter-in-word {
     background-color: var(--letter-in-word) !important;
     color: white;
+    transition: all 0.35s ease;
 }
 
 .is-letter-not-in-word {
     background-color: var(--letter-not-in-word) !important;
     color: white;
+    transition: all 0.35s ease;
 }
 
 .is-letter-in-correct-position {
     background-color: var(--letter-in-correct-position) !important;
     color: white;
+    transition: all 0.35s ease;
 }
 </style>
