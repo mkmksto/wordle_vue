@@ -1,6 +1,8 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, type ComputedRef } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
+
+import { useRandomWord } from '../stores/random_word'
 
 interface LetterGuess {
     id: string
@@ -11,11 +13,14 @@ interface LetterGuess {
 }
 
 export const useGuessTracker = defineStore('guessTracker', () => {
+    const randomWord$ = useRandomWord()
+    const { currentRandomWord$ } = storeToRefs(randomWord$)
+
     // [[{id, letter, isBlank, isLetterInWord, ....}, {...}], [{...}, {...}], ....... ]
     const allGuesses$ = ref<LetterGuess[][]>(generateEmptyGuessArray(5))
 
-    const currentGuess$: ComputedRef<LetterGuess[]> = computed(
-        () => allGuesses$.value[currentIdx$.value]
+    const currentGuess$: ComputedRef<LetterGuess[]> = computed(() =>
+        allGuesses$.value[currentIdx$.value].filter((l) => !l.isBlank)
     )
 
     const currentIdx$ = ref<number>(0)
@@ -107,11 +112,12 @@ export const useGuessTracker = defineStore('guessTracker', () => {
     }
 
     /**
-     * @param {number} curGuessNumChars - (from game settings): e.g. laugh is 5 chars
      * @returns {boolean} true if every tile at the current row is filled
      */
-    function isCurrentRowFilled$(curGuessNumChars: number): boolean {
-        return allGuesses$.value[currentIdx$.value].length === curGuessNumChars
+    function isCurrentRowFilled$(): boolean {
+        // console.log(`cur word len: ${currentRandomWord$.value.length}`)
+        // console.log(`cur guess len: ${currentGuess$.value.length}`)
+        return currentGuess$.value.length === currentRandomWord$.value.length
     }
 
     const isAllRowsFilled$: ComputedRef<boolean> = computed(() =>

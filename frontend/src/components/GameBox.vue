@@ -91,7 +91,7 @@ async function isGuessInAPI(): Promise<boolean> {
 async function onEnter(): Promise<void> {
     allowInput$.value = false
     try {
-        if (!guessTracker$.isCurrentRowFilled$(gameSettings$.value.num_chars)) return
+        if (!guessTracker$.isCurrentRowFilled$()) return
         if (!(await isGuessValid())) return
 
         await showTileColors()
@@ -143,6 +143,10 @@ async function showTileColors(): Promise<void> {
     const letterTiles = Array.from(
         document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
     ).filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
+
+    // TODO: slice letterTiles to only match the length of the current guess
+    // the above code gets all tiles even if empty (or maybe not, because this code will)
+    // only be reached when the tiles are full anyway
 
     for (const [i, tile] of letterTiles.entries()) {
         await sleep(350)
