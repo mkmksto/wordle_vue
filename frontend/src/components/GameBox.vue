@@ -207,13 +207,16 @@ async function showTileColors(): Promise<void> {
 
 /* Static Styles */
 .words-container {
+    background-color: var(--main-color);
+    padding: 4rem 20rem;
+    border-radius: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: fit-content;
     height: fit-content;
-    margin-top: 4rem;
+    margin-top: 1rem;
     gap: 0.7rem;
 }
 
@@ -243,16 +246,17 @@ async function showTileColors(): Promise<void> {
 .cell {
     width: 4rem;
     height: 4rem;
-    border: 3.5px solid var(--main-text-color);
+    /* border: 1.5px solid var(--main-text-color); */
     border-radius: 0.9rem;
 }
 
 .game-box {
-    background-color: var(--main-color);
-    margin: 2.5rem 2.5rem 2.5rem 5rem;
-    height: 90%;
+    /* background-color: var(--main-color); */
+    /* margin: 2.5rem 2.5rem 2.5rem 5rem; */
+    margin-top: 2rem;
+    height: 95%;
     width: 70%;
-    border-radius: 3rem;
+    /* border-radius: 1rem; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -260,12 +264,12 @@ async function showTileColors(): Promise<void> {
 
 .simple-keyboard {
     width: 570px;
-    margin-top: 5rem;
+    margin-top: 2rem;
     font-family: 'Space Grotesk' !important;
     font-weight: 700;
     font-size: 1.2rem;
     background-color: transparent;
-    color: white;
+    /* color: white; */
 }
 </style>
 
@@ -274,7 +278,7 @@ async function showTileColors(): Promise<void> {
 .hg-button {
     background-color: transparent !important;
     font-weight: bold !important;
-    color: white !important;
+    /* color: black !important; */
     border: none !important;
     height: 45px !important;
 }
