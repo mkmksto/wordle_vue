@@ -6,11 +6,12 @@ import { useGameSettings } from '@/stores/game_settings'
 import { useRandomWord } from '@/stores/random_word'
 import { useGuessTracker } from '@/stores/guess_tracker'
 import { useGameState } from '@/stores/game_state'
+import { useKeyboard } from '@/stores/simple_keyboard'
 
 import { allowedGuesses } from '@/modules/allowed_guesses'
 import { checkGuessValidity } from '@/modules/check_guess_validity'
 
-import Keyboard from 'simple-keyboard'
+// import Keyboard from 'simple-keyboard'
 import 'simple-keyboard/build/css/index.css'
 
 const settings$ = useGameSettings()
@@ -24,32 +25,19 @@ const { currentRandomWord$ } = storeToRefs(randomWord$)
 const { renewCurrentWord$ } = randomWord$
 
 const guessTracker$ = useGuessTracker()
-const {
-    allGuesses$,
-    currentIdx$,
-    currentGuess$,
-    isAllRowsFilled$,
-    lettersInWord$,
-    lettersNotInWord$,
-    lettersInCorrectPosition$,
-} = storeToRefs(guessTracker$)
+const { allGuesses$, currentIdx$, currentGuess$, isAllRowsFilled$ } =
+    storeToRefs(guessTracker$)
 
 const allowInput_ = ref<boolean>(false)
 
-const keyboard_ = ref<Keyboard | null>(null)
+const keyboard$ = useKeyboard()
+const { simpleKeyboard$ } = storeToRefs(keyboard$)
 
 onMounted(async () => {
     console.log('*****mounting from GameBox.vue')
-    keyboard_.value = new Keyboard('simple-keyboard', {
-        layout: {
-            default: [
-                'q w e r t y u i o p',
-                'a s d f g h j k l',
-                '{enter} z x c v b n m {bksp}',
-            ],
-        },
-        onKeyPress: onVirtualKeypress,
-    })
+
+    await keyboard$.instantiateKeyboard$()
+    simpleKeyboard$.value!.options.onKeyPress = onVirtualKeypress
 
     window.addEventListener('keydown', (e) => onKeyDown(e))
 
@@ -109,7 +97,7 @@ async function onEnter(): Promise<void> {
         if (!(await isGuessValid())) return
 
         await showTileColors()
-        await showKeyboardColors()
+        await keyboard$.showKeyboardColors()
 
         // TODO: refactor
         if (guessTracker$.isGuessCorrect$(currentRandomWord$.value)) {
@@ -139,18 +127,6 @@ async function onEnter(): Promise<void> {
     } finally {
         allowInput_.value = true
     }
-}
-
-async function showKeyboardColors(): Promise<void> {
-    keyboard_.value?.addButtonTheme(lettersInWord$.value.join(' '), 'is-letter-in-word')
-    keyboard_.value?.addButtonTheme(
-        lettersNotInWord$.value.join(' '),
-        'is-letter-not-in-word'
-    )
-    keyboard_.value?.addButtonTheme(
-        lettersInCorrectPosition$.value.join(' '),
-        'is-letter-in-correct-position'
-    )
 }
 
 async function showTileColors(): Promise<void> {

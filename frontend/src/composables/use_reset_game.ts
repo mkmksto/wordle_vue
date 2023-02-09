@@ -4,6 +4,7 @@ import { useGameState } from '../stores/game_state'
 import { useGuessTracker } from '../stores/guess_tracker'
 import { useRandomWord } from '../stores/random_word'
 import { useGameSettings } from '../stores/game_settings'
+import { useKeyboard } from '../stores/simple_keyboard'
 
 export async function useResetGame() {
     await nextTick()
@@ -11,10 +12,13 @@ export async function useResetGame() {
     const gameState$ = useGameState()
     const guessTracker$ = useGuessTracker()
     const { currentIdx$ } = storeToRefs(guessTracker$)
+
     const gameSettings$ = useGameSettings()
     const randomWord$ = useRandomWord()
+    const keyboard$ = useKeyboard()
 
     gameState$.resetGameState$()
+    keyboard$.removeKeyboardColors$()
 
     // reset the allGuesses$ array to empty arrays and reset current index
     guessTracker$.changeNumBoxesPerRow$(gameSettings$.gameSettings$.num_chars)
