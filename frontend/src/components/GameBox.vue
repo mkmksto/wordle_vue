@@ -205,7 +205,7 @@ async function sleep(ms: number): Promise<void> {
 .fetching {
     height: 1.5rem;
     font-size: 1.3rem;
-    color: white;
+    color: rgb(130, 130, 130);
     margin-top: 1rem;
     font-family: 'Space Grotesk';
 }
@@ -251,17 +251,13 @@ async function sleep(ms: number): Promise<void> {
 .cell {
     width: 4rem;
     height: 4rem;
-    /* border: 1.5px solid var(--main-text-color); */
     border-radius: 0.9rem;
 }
 
 .game-box {
-    /* background-color: var(--main-color); */
-    /* margin: 2.5rem 2.5rem 2.5rem 5rem; */
     margin-top: 2rem;
     height: 95%;
     width: 70%;
-    /* border-radius: 1rem; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -274,7 +270,6 @@ async function sleep(ms: number): Promise<void> {
     font-weight: 700;
     font-size: 1.2rem;
     background-color: transparent;
-    /* color: white; */
 }
 </style>
 
