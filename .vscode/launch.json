@@ -6,7 +6,6 @@
       "request": "launch",
       "name": "Vue App",
       "url": "http://localhost:5173",
-      // "reAttach": true,
       "webRoot": "${workspaceFolder}/frontend",
       "skipFiles": [
         "<node_internals>/**",
@@ -18,6 +17,19 @@
         "**/build/**"
       ],
       "sourceMaps": true
+    },
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": {
+        "FLASK_APP": "backend/app.py",
+        "FLASK_ENV": "development",
+        "FLASK_DEBUG": "1"
+      },
+      "args": ["run", "--no-debugger", "--no-reload"],
+      "jinja": true
     }
   ]
 }

@@ -1,0 +1,3 @@
+{
+  "python.defaultInterpreterPath": "wordle_vue/backend/venv/bin/python"
+}
