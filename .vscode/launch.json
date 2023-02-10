@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Vue App",
+      "url": "http://localhost:5173",
+      // "reAttach": true,
+      "webRoot": "${workspaceFolder}/frontend",
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**",
+        "<node_internals>/**/*.js",
+        "node_modules/**/*.js",
+        "dist/**",
+        "build/**",
+        "**/build/**"
+      ],
+      "sourceMaps": true
+    }
+  ]
+}
