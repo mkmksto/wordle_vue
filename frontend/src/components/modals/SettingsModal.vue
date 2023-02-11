@@ -17,12 +17,12 @@ const { gameSettings$ } = storeToRefs(settings$)
                 <label for="min-chars">Number of Letters</label>
 
                 <input
+                    id="min-chars"
                     v-model.number="gameSettings$.num_chars"
                     type="range"
                     min="5"
                     max="9"
                     class="range"
-                    id="min-chars"
                 />
 
                 <span class="label-val">{{ gameSettings$.num_chars }}</span>
@@ -30,7 +30,7 @@ const { gameSettings$ } = storeToRefs(settings$)
 
             <div class="setting">
                 <label for="difficulty">Difficulty</label>
-                <select v-model="gameSettings$.difficulty" id="difficulty">
+                <select id="difficulty" v-model="gameSettings$.difficulty">
                     <option selected>Medium</option>
                     <option value="easy">Easy</option>
                     <option value="medium">Medium</option>
@@ -44,7 +44,7 @@ const { gameSettings$ } = storeToRefs(settings$)
                     Save
                 </button>
 
-                <button @click="settings$.resetGameSetting$()" class="reset-settings">
+                <button class="reset-settings" @click="settings$.resetGameSetting$()">
                     Reset Settings
                 </button>
 
@@ -68,7 +68,7 @@ const { gameSettings$ } = storeToRefs(settings$)
 
 label {
     font-size: 1.1rem;
-    letter-spacing: 0.061rem;
+    /* letter-spacing: 0.061rem; */
 }
 /* ------- */
 .setting {
@@ -115,9 +115,9 @@ option {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Space Grotesk';
+    /* font-family: 'Space Grotesk'; */
     font-size: 1.3rem;
-    background-color: rgba(50, 50, 50, 0.4);
+    background-color: rgba(50, 50, 50, 0.7);
 }
 
 .modal-card {
@@ -136,7 +136,7 @@ option {
 /* ----- */
 button {
     margin-top: 0.4rem;
-    font-family: 'Space Grotesk';
+    /* font-family: 'Space Grotesk'; */
     font-size: 1rem;
     padding: 0.4rem;
     border-radius: 0.4rem;

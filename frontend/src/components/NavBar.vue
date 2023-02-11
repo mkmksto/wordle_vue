@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+
 import { useModalState } from '@/stores/modal_states'
-function showGameInfo() {
-    //
-}
+import { useResetGame } from '@/composables/use_reset_game'
+import { useGameState } from '@/stores/game_state'
+
+const gameState$ = useGameState()
+const { loseState$ } = storeToRefs(gameState$)
 
 const modalStates$ = useModalState()
 </script>
@@ -14,7 +18,7 @@ const modalStates$ = useModalState()
                 <fa icon="fa-solid fa-bars"></fa>
             </li>
 
-            <li class="header" @click="showGameInfo">
+            <li class="header" @click="modalStates$.showInfoModal$ = true">
                 <fa icon="fa-solid fa-circle-info"></fa>
             </li>
 
@@ -27,11 +31,11 @@ const modalStates$ = useModalState()
 
         <div class="controls">
             <ul>
-                <li class="header">
+                <li class="header" @click="loseState$ = true">
                     <fa icon="fa-flag"></fa>
                 </li>
 
-                <li class="header">
+                <li class="header" @click="useResetGame">
                     <fa icon="fa-arrows-rotate"></fa>
                 </li>
             </ul>
