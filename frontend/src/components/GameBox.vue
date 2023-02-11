@@ -73,18 +73,6 @@ async function isGuessValid(): Promise<boolean> {
     await sleep(1000)
     showInvalidGuessModal$.value = false
     return false
-    // if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
-    //     if (await isGuessInAPI()) {
-    //         return true
-    //     } else {
-    //         showInvalidGuessModal$.value = true
-    //         await sleep(1000)
-    //         showInvalidGuessModal$.value = false
-    //         return false
-    //     }
-    // } else {
-    //     return true
-    // }
 }
 
 async function isGuessInAPI(): Promise<boolean> {
@@ -307,6 +295,10 @@ async function sleep(ms: number): Promise<void> {
     font-weight: 700;
     font-size: 1.2rem;
     background-color: transparent;
+    border: 3px solid var(--main-color);
+    /* border: 3px solid rgb(100, 100, 100); */
+    border-radius: 2rem;
+    padding: 1rem;
 }
 </style>
 
@@ -317,6 +309,8 @@ async function sleep(ms: number): Promise<void> {
     font-weight: bold !important;
     border: none !important;
     height: 45px !important;
+    box-shadow: none !important;
+    color: rgb(80, 80, 80);
 }
 
 .is-letter-in-word {
