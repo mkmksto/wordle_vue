@@ -47,6 +47,7 @@ def get_random_word():
             break
 
     print('************ FINAL random word: ', rand_word, '**FREQ: ', frequency)
+    # return {'word': 'ellis'}
     return {'word': rand_word}
 
 
@@ -75,4 +76,5 @@ def test_if_guess_is_valid():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # set to True if debugging in the browser
+    app.run(debug=False)
