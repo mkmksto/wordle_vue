@@ -24,6 +24,18 @@ const modalStates$ = useModalState()
         </ul>
 
         <div class="game-title">WORDLE</div>
+
+        <div class="controls">
+            <ul>
+                <li class="header">
+                    <fa icon="fa-flag"></fa>
+                </li>
+
+                <li class="header">
+                    <fa icon="fa-arrows-rotate"></fa>
+                </li>
+            </ul>
+        </div>
     </nav>
 </template>
 
@@ -71,5 +83,10 @@ ul {
 li {
     font-size: 1.7rem;
     cursor: pointer;
+}
+
+/* */
+.controls {
+    margin-top: 2rem;
 }
 </style>

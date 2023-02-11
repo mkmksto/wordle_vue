@@ -47,6 +47,7 @@ main {
     --letter-in-word: rgb(190, 130, 67);
     --letter-not-in-word: rgb(100, 100, 100);
     --letter-in-correct-position: rgb(119, 155, 67);
+    --main-color-al: rgba(200, 50, 50, 0.3);
     /* --main-text-color: #faf0ea; */
 }
 </style>

@@ -5,10 +5,16 @@ import App from './App.vue'
 import './assets/main.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBars, faCircleInfo, faGear } from '@fortawesome/free-solid-svg-icons'
+import {
+    faBars,
+    faCircleInfo,
+    faGear,
+    faFlag,
+    faArrowsRotate,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faBars, faCircleInfo, faGear)
+library.add(faBars, faCircleInfo, faGear, faFlag, faArrowsRotate)
 
 const app = createApp(App)
 
