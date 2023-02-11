@@ -224,7 +224,8 @@ async function sleep(ms: number): Promise<void> {
     </div>
 </template>
 
-<style scoped>
+<style>
+/* DO NOT SCOPE these styles because the info modal also uses these */
 /* Dynamic Styles */
 
 .fetching {
@@ -273,12 +274,6 @@ async function sleep(ms: number): Promise<void> {
     user-select: none;
 }
 
-.cell {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 0.9rem;
-}
-
 .game-box {
     margin-top: 2rem;
     height: 95%;
@@ -296,7 +291,6 @@ async function sleep(ms: number): Promise<void> {
     font-size: 1.2rem;
     background-color: transparent;
     border: 3px solid var(--main-color);
-    /* border: 3px solid rgb(100, 100, 100); */
     border-radius: 2rem;
     padding: 1rem;
 }

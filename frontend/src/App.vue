@@ -7,7 +7,9 @@ import NavBar from '@/components/NavBar.vue'
 import GameLostModal from '@/components/modals/GameLostModal.vue'
 import GameWonModal from '@/components/modals/GameWonModal.vue'
 import InvalidGuessModal from '@/components/modals/InvalidGuessModal.vue'
+
 import SettingsModal from '@/components/modals/SettingsModal.vue'
+import InfoModal from '@/components/modals/InfoModal.vue'
 
 import { storeToRefs } from 'pinia'
 
@@ -23,6 +25,7 @@ const modalStates$ = useModalState()
     <GameWonModal v-if="gameState$.winState$ === true" />
     <InvalidGuessModal v-if="showInvalidGuessModal$" />
     <SettingsModal v-if="modalStates$.showSettingsModal$" />
+    <InfoModal v-if="modalStates$.showInfoModal$" />
 
     <NavBar />
     <main>
@@ -45,8 +48,10 @@ main {
     --main-color: hsl(11, 65.9%, 46.9%);
     --main-text-color: #f9e9f2;
     --letter-in-word: rgb(190, 130, 67);
-    --letter-not-in-word: rgb(100, 100, 100);
-    --letter-in-correct-position: rgb(119, 155, 67);
+    --letter-not-in-word: rgb(110, 110, 110);
+    /* rgba(41, 165, 136, 0.9) */
+    /* --letter-in-correct-position: rgb(119, 155, 67); */
+    --letter-in-correct-position: rgba(41, 165, 136, 0.9);
     --main-color-al: rgba(200, 50, 50, 0.3);
     /* --main-text-color: #faf0ea; */
 }
