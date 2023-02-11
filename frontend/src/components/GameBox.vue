@@ -56,7 +56,7 @@ function onKeyDown(e: KeyboardEvent): void {
 function handleInput(key: string) {
     if (!allowInput$.value || !currentRandomWord$.value) return
     if (/^[a-zA-Z]$/.test(key)) {
-        guessTracker$.addLetterToGuess$(key, currentRandomWord$.value)
+        guessTracker$.addLetterToGuess$(key)
     } else if (key === 'Backspace' || key === '{bksp}') {
         guessTracker$.removeLastLetterFromGuess$()
     } else if (key === 'Enter' || key === '{enter}') {
@@ -148,16 +148,47 @@ async function showTileColors(): Promise<void> {
     // the above code gets all tiles even if empty (or maybe not, because this code will)
     // only be reached when the tiles are full anyway
 
+    // const letterPool = currentRandomWord$.value.split('')
+    const guessLetterPool: string[] = []
+    const validLetters: string[] = currentRandomWord$.value.split('')
+
+    for (let i = 0; i < currentRandomWord$.value.length; i++) {
+        // letter is an exact match at the exact index
+        if (currentGuess$.value[i].letter === currentRandomWord$.value[i]) {
+            currentGuess$.value[i].isLetterInCorrectPosition = true
+            // push empty char so that the indices for comparison still matches
+            guessLetterPool.push(' ')
+
+            // if exact match, remove letter from validLetters for comparison
+            // this is to prevent cases like e.g. the word is `ellis` and typing `eager` would make the
+            // first `e` green, but would still make the second `e` yellow (should be grey)
+            const idxAtValidLettersArr = validLetters.indexOf(
+                currentRandomWord$.value[i]
+            )
+            validLetters.splice(idxAtValidLettersArr, 1)
+        } else {
+            // if not an exact match, throw into pool for later comparison
+            guessLetterPool.push(currentGuess$.value[i].letter)
+        }
+    }
+
+    for (let i = 0; i < currentRandomWord$.value.length; i++) {
+        if (validLetters.includes(guessLetterPool[i])) {
+            currentGuess$.value[i].isLetterInWord = true
+        }
+    }
+
+    // actual coloring part
     for (const [i, tile] of letterTiles.entries()) {
         await sleep(350)
-        const letterAtIdx = currentGuess$.value[i]
+        const letterGuessObjAtIdx = currentGuess$.value[i]
 
-        if (letterAtIdx.isLetterInWord && !letterAtIdx.isLetterInCorrectPosition) {
+        if (letterGuessObjAtIdx.isLetterInWord) {
             tile.classList.add('is-letter-in-word')
-        } else if (!letterAtIdx.isLetterInWord) {
-            tile.classList.add('is-letter-not-in-word')
-        } else if (letterAtIdx.isLetterInCorrectPosition) {
+        } else if (letterGuessObjAtIdx.isLetterInCorrectPosition) {
             tile.classList.add('is-letter-in-correct-position')
+        } else if (!letterGuessObjAtIdx.isLetterInWord) {
+            tile.classList.add('is-letter-not-in-word')
         }
     }
 }

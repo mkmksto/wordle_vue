@@ -39,24 +39,25 @@ export const useGuessTracker = defineStore('guessTracker', () => {
      * Adds letter to the current row then updates whether the letter is in the word, etc.
      *
      * @param {string} letterToAdd - the key press
-     * @param {string} currentRandomWord - the word fetched from the backend (for comparison)
      */
-    function addLetterToGuess$(letterToAdd: string, currentRandomWord: string): void {
+    function addLetterToGuess$(letterToAdd: string): void {
         const currentRow$ = allGuesses$.value[currentIdx$.value]
         const nextBlankSpace = currentRow$.find((l) => l.isBlank) as LetterGuess
-        const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
+        // const blankSpaceIdx: number = currentRow$.findIndex((l) => l.isBlank)
 
         if (!nextBlankSpace) return
         nextBlankSpace.letter = letterToAdd
         nextBlankSpace.isBlank = false
 
-        if (currentRandomWord.includes(letterToAdd)) {
-            nextBlankSpace.isLetterInWord = true
-        }
-
-        if (currentRandomWord[blankSpaceIdx] === letterToAdd) {
-            nextBlankSpace.isLetterInCorrectPosition = true
-        }
+        // if (currentRandomWord[blankSpaceIdx] === letterToAdd) {
+        //     nextBlankSpace.isLetterInCorrectPosition = true
+        //     letterPool$.value[blankSpaceIdx] = ''
+        //     return
+        // }
+        //
+        // if (letterPool$.value.includes(letterToAdd)) {
+        //     nextBlankSpace.isLetterInWord = true
+        // }
     }
 
     const flattenedAllGuesses$: ComputedRef<LetterGuess[]> = computed(() => {
