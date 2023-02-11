@@ -12,4 +12,13 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 'latest',
     },
+    overrides: [
+        {
+            // enable the rule specifically for TypeScript files
+            files: ['*.ts', '*.mts', '*.cts', '*.tsx', '*.vue'],
+            rules: {
+                '@typescript-eslint/explicit-function-return-type': 'error',
+            },
+        },
+    ],
 }

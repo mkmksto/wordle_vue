@@ -7,7 +7,7 @@ export const useGameState = defineStore('gameState', () => {
     const showInvalidGuessModal$ = ref<boolean>(false)
     const allowInput$ = ref<boolean>(false)
 
-    function resetGameState$() {
+    function resetGameState$(): void {
         winState$.value = null
         loseState$.value = null
         allowInput$.value = false

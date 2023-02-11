@@ -6,7 +6,7 @@ import { useRandomWord } from '../stores/random_word'
 import { useGameSettings } from '../stores/game_settings'
 import { useKeyboard } from '../stores/simple_keyboard'
 
-export async function useResetGame() {
+export async function useResetGame(): Promise<void> {
     await nextTick()
 
     const gameState$ = useGameState()

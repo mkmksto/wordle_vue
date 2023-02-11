@@ -44,7 +44,7 @@ onMounted(async () => {
     console.log('*****current random word: ', currentRandomWord$)
 })
 
-function onVirtualKeypress(btn: string) {
+function onVirtualKeypress(btn: string): void {
     handleInput(btn)
 }
 
@@ -53,7 +53,7 @@ function onKeyDown(e: KeyboardEvent): void {
     handleInput(e.key)
 }
 
-function handleInput(key: string) {
+function handleInput(key: string): void {
     if (!allowInput$.value || !currentRandomWord$.value) return
     if (/^[a-zA-Z]$/.test(key)) {
         guessTracker$.addLetterToGuess$(key)
