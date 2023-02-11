@@ -65,18 +65,26 @@ function handleInput(key: string) {
 }
 
 async function isGuessValid(): Promise<boolean> {
-    if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
-        if (await isGuessInAPI()) {
-            return true
-        } else {
-            showInvalidGuessModal$.value = true
-            await sleep(1000)
-            showInvalidGuessModal$.value = false
-            return false
-        }
-    } else {
+    if (allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join('')))
         return true
-    }
+    if (await isGuessInAPI()) return true
+
+    showInvalidGuessModal$.value = true
+    await sleep(1000)
+    showInvalidGuessModal$.value = false
+    return false
+    // if (!allowedGuesses.includes(currentGuess$.value.map((l) => l.letter).join(''))) {
+    //     if (await isGuessInAPI()) {
+    //         return true
+    //     } else {
+    //         showInvalidGuessModal$.value = true
+    //         await sleep(1000)
+    //         showInvalidGuessModal$.value = false
+    //         return false
+    //     }
+    // } else {
+    //     return true
+    // }
 }
 
 async function isGuessInAPI(): Promise<boolean> {
@@ -93,6 +101,7 @@ async function onEnter(): Promise<void> {
         if (!guessTracker$.isCurrentRowFilled$()) return
         if (!(await isGuessValid())) return
 
+        checkValidityOfEachLetterInGuess()
         await showTileColors()
         await keyboard$.showKeyboardColors()
 
@@ -137,12 +146,14 @@ function hasUserLost(): boolean {
     }
 }
 
+/**
+ * loop through each Tile(HTML Element) and color each tile depending on the
+ * correctness of the letter guess
+ */
 async function showTileColors(): Promise<void> {
     // TODO: slice letterTiles to only match the length of the current guess
     // the above code gets all tiles even if empty (or maybe not, because this code will)
     // only be reached when the tiles are full anyway
-
-    matchEachLetter()
 
     // Get all letter tile divs, then filter only the current row
     const letterTiles = Array.from(
@@ -168,7 +179,7 @@ async function showTileColors(): Promise<void> {
  * Checks whether or not each letter from the current guess is in the correct position
  * or if the letter is anywhere in the word, otherwise, will defualt to NOT anywhere in the current random word
  */
-function matchEachLetter(): void {
+function checkValidityOfEachLetterInGuess(): void {
     const guessLetterPool: string[] = []
     const validLetters: string[] = currentRandomWord$.value.split('')
 
