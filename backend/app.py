@@ -1,4 +1,5 @@
 import pathlib
+import re
 from typing import Any, Generator
 
 from flask import Flask, request
@@ -43,7 +44,11 @@ def get_random_word():
         print('*****FETCHING*****')
         rand_word: str = english_dict.get_random_word()
         frequency: float = english_dict.get_frequency(rand_word) or difficulty
-        if len(rand_word) == num_chars and frequency >= difficulty:
+        if (
+            len(rand_word) == num_chars
+            and frequency >= difficulty
+            and re.search('^[a-zA-Z]*?$', rand_word)
+        ):
             break
 
     print('************ FINAL random word: ', rand_word, '**FREQ: ', frequency)
