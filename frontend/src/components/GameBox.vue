@@ -62,7 +62,6 @@ function handleInput(key: string) {
     } else if (key === 'Enter' || key === '{enter}') {
         onEnter()
     }
-    console.log('***keyboard press***')
 }
 
 async function isGuessValid(): Promise<boolean> {
@@ -112,7 +111,7 @@ async function onEnter(): Promise<void> {
             return
         }
 
-        // if code has reached this line without retuning, increment current row idx
+        // if code has reached this line without returning, increment current row idx
         guessTracker$.currentIdx$++
     } catch (e) {
         console.error(e)
@@ -139,16 +138,37 @@ function hasUserLost(): boolean {
 }
 
 async function showTileColors(): Promise<void> {
+    // TODO: slice letterTiles to only match the length of the current guess
+    // the above code gets all tiles even if empty (or maybe not, because this code will)
+    // only be reached when the tiles are full anyway
+
+    matchEachLetter()
+
     // Get all letter tile divs, then filter only the current row
     const letterTiles = Array.from(
         document.querySelectorAll('.letter') as NodeListOf<HTMLDivElement>
     ).filter((tile) => parseInt(tile.dataset.rowid!) === currentIdx$.value)
 
-    // TODO: slice letterTiles to only match the length of the current guess
-    // the above code gets all tiles even if empty (or maybe not, because this code will)
-    // only be reached when the tiles are full anyway
+    // actual coloring part
+    for (const [i, tile] of letterTiles.entries()) {
+        await sleep(350)
+        const letterGuessObjAtIdx = currentGuess$.value[i]
 
-    // const letterPool = currentRandomWord$.value.split('')
+        if (letterGuessObjAtIdx.isLetterInWord) {
+            tile.classList.add('is-letter-in-word')
+        } else if (letterGuessObjAtIdx.isLetterInCorrectPosition) {
+            tile.classList.add('is-letter-in-correct-position')
+        } else if (!letterGuessObjAtIdx.isLetterInWord) {
+            tile.classList.add('is-letter-not-in-word')
+        }
+    }
+}
+
+/**
+ * Checks whether or not each letter from the current guess is in the correct position
+ * or if the letter is anywhere in the word, otherwise, will defualt to NOT anywhere in the current random word
+ */
+function matchEachLetter(): void {
     const guessLetterPool: string[] = []
     const validLetters: string[] = currentRandomWord$.value.split('')
 
@@ -175,20 +195,6 @@ async function showTileColors(): Promise<void> {
     for (let i = 0; i < currentRandomWord$.value.length; i++) {
         if (validLetters.includes(guessLetterPool[i])) {
             currentGuess$.value[i].isLetterInWord = true
-        }
-    }
-
-    // actual coloring part
-    for (const [i, tile] of letterTiles.entries()) {
-        await sleep(350)
-        const letterGuessObjAtIdx = currentGuess$.value[i]
-
-        if (letterGuessObjAtIdx.isLetterInWord) {
-            tile.classList.add('is-letter-in-word')
-        } else if (letterGuessObjAtIdx.isLetterInCorrectPosition) {
-            tile.classList.add('is-letter-in-correct-position')
-        } else if (!letterGuessObjAtIdx.isLetterInWord) {
-            tile.classList.add('is-letter-not-in-word')
         }
     }
 }
