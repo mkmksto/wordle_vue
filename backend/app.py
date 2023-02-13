@@ -3,11 +3,11 @@ import re
 from typing import Any, Generator
 
 from flask import Flask, render_template, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from utils import english_dictionary, game_settings, json_utils
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 
 def main():
@@ -24,11 +24,13 @@ english_dict = main()
 
 
 @app.route('/')
+@cross_origin(origins=['*'])
 def index():
     return render_template('index.html')
 
 
 @app.route('/api/random_word', methods=['GET', 'POST'])
+@cross_origin(origins=['*'])
 def get_random_word():
     # shape: {'num_chars': int, 'difficulty': str}
     frontend_settings: dict[str, Any] | None = request.get_json() or {}
@@ -57,6 +59,7 @@ def get_random_word():
 
 
 @app.route('/api/test_if_guess_is_valid', methods=['GET', 'POST'])
+@cross_origin(origins=['*'])
 def test_if_guess_is_valid():
     frontend_data: dict[str, Any] | None = request.get_json() or {}
 
