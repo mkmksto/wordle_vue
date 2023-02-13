@@ -2,7 +2,7 @@ import pathlib
 import re
 from typing import Any, Generator
 
-from flask import Flask, request
+from flask import Flask, render_template, request
 from flask_cors import CORS
 from utils import english_dictionary, game_settings, json_utils
 
@@ -25,7 +25,7 @@ english_dict = main()
 
 @app.route('/')
 def index():
-    return 'hello from index'
+    return render_template('index.html')
 
 
 @app.route('/api/random_word', methods=['GET', 'POST'])
