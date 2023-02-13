@@ -20,7 +20,7 @@ class EnglishDict:
     def get_random_word(self) -> str:
         return random.choice(self._word).lower()
 
-    def get_frequency(self, word: str) -> float | None:
+    def get_frequency(self, word: str) -> float:
         """
         Return the frequency (per million) for a particular word
 
@@ -33,7 +33,7 @@ class EnglishDict:
         data_muse_api = f"https://api.datamuse.com/words?sp={word}&qe=sp&md=fr&max=1"
         res: requests.Response = requests.get(data_muse_api, timeout=5)
         if not res:
-            return None
+            return 0
 
         res_dict: dict = res.json()
         freq = res_dict[0]
