@@ -13,7 +13,9 @@ def get_dict_file_paths():
     print(dict_files)
     dict_files = list(dict_files.glob('D*.json'))
 
-    return dict_files
+    if dict_files:
+        return dict_files
+    return ['']
 
     # debug might not be necessary at all beaucse Path always operates relative
     # to where the file was defined (which is nice)
@@ -22,9 +24,8 @@ def get_dict_file_paths():
     # return dict_files
 
 
-def get_all_dict_data(file_paths):
+def get_all_dict_data(file_paths) -> dict:
     """Given a list of file paths, consolidate all JSON info then return
-
 
     Args:
         file_paths: ['path/1/DA.json', 'path/2/DZ.json', ...]
