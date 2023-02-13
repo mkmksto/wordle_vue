@@ -85,4 +85,4 @@ def test_if_guess_is_valid():
 
 if __name__ == "__main__":
     # set to True if debugging in the browser
-    app.run(debug=False)
+    app.run(debug=True)
