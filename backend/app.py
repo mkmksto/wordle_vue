@@ -11,9 +11,7 @@ app = Flask(__name__)
 
 
 def main():
-    dict_file_paths: Generator[
-        pathlib.Path, None, None
-    ] | None = json_utils.get_dict_file_paths()
+    dict_file_paths = json_utils.get_dict_file_paths()
     if not dict_file_paths:
         raise FileNotFoundError('Dictionary files not found')
     all_dict_data: dict = json_utils.get_all_dict_data(dict_file_paths)
